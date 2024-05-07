@@ -1,0 +1,8 @@
+Lancer le backend :
+aller dans le répertoir /back
+faire la commande : . .venv/bin/activate
+
+Lancer le front :
+aller dans le répertoir /front
+faire les commandes : npm install
+                      npm run dev
