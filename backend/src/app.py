@@ -11,5 +11,9 @@ app.register_blueprint(quiz_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(db_bp)
 
+@app.route('/quizz-space')
+def quizz_space():
+    return 'Quizz Space'
+
 if __name__ == '__main__':
     app.run(debug=True)

@@ -16,10 +16,10 @@ module.exports = {
 		'indent': ['error', 'tab'], // Indentation avec tab
 		'semi': ['error', 'always'], // Toujours mettre un point-virgule à la fin des instructions
 		'quotes': ['error', 'single'], // Utiliser des guillemets simples pour les chaînes de caractères
-		'comma-spacing': ['error', {'before': false, 'after': true}], // Espacement après la virgule, pas avant
-		'object-curly-spacing': ['error', 'never'], // Espacement à l'intérieur des accolades des objets
+		'comma-spacing': ['error', { 'before': false, 'after': true }], // Espacement après la virgule, pas avant
+		'object-curly-spacing': ['error', 'always'], // Espacement à l'intérieur des accolades des objets
 		'array-bracket-spacing': ['error', 'never'], // Espacement à l'intérieur des crochets des tableaux
-		'keyword-spacing': ['error', {'before': true, 'after': true}], // Espacement autour des mots-clés
+		'keyword-spacing': ['error', { 'before': true, 'after': true }], // Espacement autour des mots-clés
 		'space-infix-ops': 'error', // Espacement autour des opérateurs
 		'no-multi-spaces': 'error', // Pas de multiples espaces consécutifs
 
