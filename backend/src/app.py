@@ -16,13 +16,17 @@ def close_connection(exception):
     if db is not None:
         db.close()
 
-@app.route('/')
+@app.route('/home')
 def index():
     db = get_db()
     cursor = db.cursor()
     cursor.execute("SELECT * FROM table_name")
     rows = cursor.fetchall()
     return str(rows)
+
+@app.route('/quizz-space')
+def quizz_space():
+    return 'Quizz Space'
 
 if __name__ == '__main__':
     app.run(debug=True)

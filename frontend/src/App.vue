@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import HeaderApp from './components/HeaderApp.vue';
+import LoginForm from './components/LoginForm.vue';
 </script>
 
 <template>
-	<body>
-		<HeaderApp />
-	</body>
+    <LoginForm />
 </template>
 
 <style scoped>
