@@ -45,7 +45,7 @@ def decode_token(auth_token):
     try:
         payload = jwt.decode(auth_token, secret, algorithms="HS256")
         # if decoding did not fail, this means we are correctly logged in
-        return payload['sub']
+        return True
     except jwt.ExpiredSignatureError:
         raise JwtError('Signature expired. Please log in again.')
     except jwt.InvalidTokenError as e:
