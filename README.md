@@ -9,6 +9,11 @@
     source .venv/bin/activate
     ```
 
+3. Run l'application :
+    ```bash
+    flask --app src/app run
+    ```
+
 ## Lancer le front :
 
 1. Accédez au répertoire `/frontend`.
