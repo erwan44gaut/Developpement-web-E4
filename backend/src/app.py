@@ -1,28 +1,13 @@
-from flask import Flask, g
-import sqlite3
+from flask import Flask
+from config import Config
+from routes.quiz import quiz_bp
+from routes.auth import auth_bp
 
 app = Flask(__name__)
-app.config['DATABASE'] = '../db/database.db'
+app.config.from_object(Config)
 
-def get_db():
-    db = getattr(g, '_database', None)
-    if db is None:
-        db = g._database = sqlite3.connect(app.config['DATABASE'])
-    return db
-
-@app.teardown_appcontext
-def close_connection(exception):
-    db = getattr(g, '_database', None)
-    if db is not None:
-        db.close()
-
-@app.route('/home')
-def index():
-    db = get_db()
-    cursor = db.cursor()
-    cursor.execute("SELECT * FROM table_name")
-    rows = cursor.fetchall()
-    return str(rows)
+app.register_blueprint(quiz_bp)
+app.register_blueprint(auth_bp)
 
 @app.route('/quizz-space')
 def quizz_space():
