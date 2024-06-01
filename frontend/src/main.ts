@@ -1,9 +1,10 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import PrimeVue from 'primevue/config';
-import FloatLabel from 'primevue/floatlabel';
+
 import Button from 'primevue/button';
-import Card from 'primevue/card';
+import InputText from 'primevue/inputtext';
+import Dialog from 'primevue/dialog';
 
 
 import 'primevue/resources/themes/aura-light-green/theme.css';
@@ -14,8 +15,8 @@ const app = createApp(App);
 
 app.use(PrimeVue);
 
-app.component('VueFloatLabel', FloatLabel);
 app.component('VueButton', Button);
-app.component('VueCard', Card);
+app.component('VueInputText', InputText);
+app.component('VueDialog', Dialog);
 
 app.mount('#app');

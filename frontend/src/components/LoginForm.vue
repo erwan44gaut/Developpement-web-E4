@@ -1,31 +1,36 @@
 <script setup lang="ts">
+import { ref } from 'vue';
+
+const visible = ref(false);
 </script>
 
 <template>
-    <div class="container">
-        <div>
-            <VueCard>
-                <template #title>Advanced Card</template>
-                <template #content>
-                <p class="m-0">
-                    Bienvenue sur le quizz de Thomas, Alex et Erwan !
-                </p>
-                </template>
-                <template #footer>
-                    <div class="flex gap-3 mt-1">
-                        <VueButton label="Cancel" severity="secondary" />
-                        <VueButton label="Save" class="w-full" />
-                    </div>
-                </template>
-            </VueCard>
-        </div>
+    <div class="card">
+        <VueButton label="Connection" @click="visible = true" />
+        <VueDialog v-model:visible="visible" modal header="Admin Connection">
+            <div class="message">
+                <span>Enter your password.</span>
+            </div>
+            <div class="bottom">
+                <VueInputText id="input" placeholder="******" />
+                <VueButton id="button" type="button" label="Connection" @click="visible = false"></VueButton>
+            </div>
+        </VueDialog>
     </div>
 </template>
 
 <style scoped>
-.container {
+.bottom {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.message {
+    margin-bottom: 10px;
+}
+
+#input {
+    flex: 1;
 }
 </style>
