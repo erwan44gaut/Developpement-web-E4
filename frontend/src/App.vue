@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import HeaderApp from './components/HeaderApp.vue';
-import LoginForm from './components/LoginForm.vue';
+// import LoginForm from './components/LoginForm.vue';
+import MenuSelector from './components/MenuSelector.vue';
 </script>
 
 <template>
-    <LoginForm />
+    <HeaderApp />
+    <MenuSelector />
 </template>
 
 <style scoped>

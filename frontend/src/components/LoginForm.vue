@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 
 const visible = ref(false);
+const value = ref('');
 </script>
 
 <template>
@@ -12,7 +13,7 @@ const visible = ref(false);
                 <span>Enter your password.</span>
             </div>
             <div class="bottom">
-                <VueInputText id="input" placeholder="******" />
+                <VuePassword id="input" v-model="value" toggleMask :feedback="false" placeholder="******"/>
                 <VueButton id="button" type="button" label="Connection" @click="visible = false"></VueButton>
             </div>
         </VueDialog>
