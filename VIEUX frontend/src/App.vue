@@ -5,7 +5,7 @@ import MenuSelector from './components/MenuSelector.vue';
 </script>
 
 <template>
-    <HeaderApp />
+    <!-- <HeaderApp /> -->
     <MenuSelector />
 </template>
 

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { type Quizz, } from '@/types';
-import { ref } from 'vue';
+import QuizzManager from './QuizzManager.vue';
+import EditorManager from './Editor/EditorManager.vue';
 
 const quizzList: Quizz[] = ([
 	{
@@ -30,28 +31,57 @@ const quizzList: Quizz[] = ([
 			{ id: 7, label: '5', value: 3 },
 			{ id: 8, label: '6', value: 4 }
 		]
+	},
+	{
+		id: 3,
+		question: {
+			id: 3,
+			label: 'Is the earth flat?',
+			type: 3
+		},
+		answers: [
+			{ id: 9, label: 'True', value: 1 },
+			{ id:10, label: 'False', value: 2 }
+		]
 	}
 ]);
 
-const computingResult = ref(true);
 </script>
 
 <template>
     <VueTabView class="tab_view">
         <VueTabPanel header="Play Quizz">
-            <VueQuizzManager :quizz-list="quizzList"></VueQuizzManager>
-            <VueButton id="result-button" label="See my results" :disabled="computingResult"/>
+			<div class="play-quizz">
+				<QuizzManager :quizz-list="quizzList"></QuizzManager>
+				<div class="play-quizz-footer">
+					<VueButton label="Clear my answers" severity="danger" outlined/>
+					<VueButton label="Validate my answers"/>
+				</div>
+			</div>
         </VueTabPanel>
         <VueTabPanel header="Results">
         </VueTabPanel>
         <VueTabPanel header="Edit Quizz">
+			<!-- <EditorManager></EditorManager> -->
         </VueTabPanel>
     </VueTabView>
 </template>
 
 <style scoped>
-#result-button {
-    width: 100%;
-    margin-top: 2em;
+.play-quizz {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.play-quizz-footer {
+  margin-top: 2em;
+  width: 100%;
+  display: flex;
+  gap: 10px;
+}
+
+.play-quizz-footer > * {
+  flex: 1;
 }
 </style>

@@ -1,23 +1,39 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import HomeView from '../views/HomeView.vue';
+import PlayView from '../views/PlayView.vue';
+import ScoreView from '@/views/ScoreView.vue';
+import LeadboardView from '@/views/LeadboardView.vue';
+import AdminView from '@/views/AdminView.vue';
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: HomeView
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
-    }
-  ]
-})
+	history: createWebHistory(import.meta.env.BASE_URL),
+	routes: [
+		{
+			path: '/',
+			name: 'home',
+			component: HomeView
+		},
+		{
+			path: '/play',
+			name: 'play',
+			component: PlayView
+		},
+		{
+			path: '/score',
+			name: 'score',
+			component: ScoreView
+		},
+		{
+			path: '/leadboard',
+			name: 'leadboard',
+			component: LeadboardView
+		},
+		{
+			path: '/admin',
+			name: 'admin',
+			component: AdminView
+		},
+	]
+});
 
-export default router
+export default router;

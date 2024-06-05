@@ -2,7 +2,7 @@
 import { defineProps, type PropType, ref } from 'vue';
 import { type Question, type Answer } from '@/types';
 
-defineProps({
+const props = defineProps({
 	question: {
 		type: Object as PropType<Question>,
 		required: true
@@ -14,28 +14,17 @@ defineProps({
 });
 
 const selectedCategory = ref('');
+const options = ref(props.answers.map(answer => answer.label));
 </script>
 
 <template>
-  <div class="container">
+  <div class="quizz-card">
     <div class="question">
-      <p>{{ question.label }}</p>
+      {{ question.label }}
     </div>
-    <div class="answers" v-for="answer in answers" :key="answer.id">
-      <VueRadioButton v-model="selectedCategory" name="dynamic" :value="answer.label" />
-      <label>{{ answer.label }}</label>
-    </div>
+    <VueSelectButton v-model="selectedCategory" :options="options" aria-labelledby="basic" />
   </div>
 </template>
 
 <style scoped>
-.container {
-
-}
-
-.answers {
-    display: flex;
-    gap: 10px;
-    padding-top: 5px;
-}
 </style>
