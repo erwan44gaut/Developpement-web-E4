@@ -18,6 +18,7 @@ def rebuild_db():
     cursor.execute("""
     CREATE TABLE questions (
         question_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        question_title TEXT NOT NULL,
         question_text TEXT NOT NULL,
         image_url TEXT,
         position INTEGER NOT NULL UNIQUE
