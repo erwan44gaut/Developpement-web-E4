@@ -50,7 +50,6 @@ def get_question_by_position():
     cursor = db.cursor()
     cursor.execute("SELECT * FROM questions WHERE position = ?", (position,))
     question = cursor.fetchone()
-    print(question)
     if question:
         cursor.execute("SELECT * FROM answers WHERE question_id = ?", (question[0],))
         answers = cursor.fetchall()
@@ -114,20 +113,57 @@ def create_question():
     db = get_db()
     cursor = db.cursor()
 
-    cursor.execute("""
-    INSERT INTO questions (question_title, question_text, image_url, position)
-    VALUES (?, ?, ?, ?)
-    """, (question_title, question_text, image_url, position))
-    question_id = cursor.lastrowid
+    try:
+        # Start a transaction
+        db.execute("BEGIN")
+        print("Transaction started")
 
-    for answer in possible_answers:
+        # Shift positions up for questions at and after the new position, starting from the bottom
         cursor.execute("""
-        INSERT INTO answers (question_id, answer_text, is_correct)
-        VALUES (?, ?, ?)
-        """, (question_id, answer['text'], answer['isCorrect']))
+        SELECT MAX(position) FROM questions WHERE position >= ?
+        """, (position,))
+        max_position = cursor.fetchone()[0]
+        
+        if max_position is not None:
+            for pos in range(max_position, position - 1, -1):
+                cursor.execute("""
+                UPDATE questions
+                SET position = position + 1
+                WHERE position = ?
+                """, (pos,))
 
-    db.commit()
-    return jsonify({"id": question_id}), 200
+        print("Positions shifted up")
+
+        # Insert the new question
+        cursor.execute("""
+        INSERT INTO questions (question_title, question_text, image_url, position)
+        VALUES (?, ?, ?, ?)
+        """, (question_title, question_text, image_url, position))
+        question_id = cursor.lastrowid
+        print(f"Inserted new question with ID: {question_id}")
+
+        # Insert possible answers
+        for answer in possible_answers:
+            cursor.execute("""
+            INSERT INTO answers (question_id, answer_text, is_correct)
+            VALUES (?, ?, ?)
+            """, (question_id, answer['text'], answer['isCorrect']))
+        print("Inserted possible answers")
+
+        # Commit the transaction
+        db.commit()
+        print("Transaction committed")
+        return jsonify({"id": question_id}), 200
+
+    except sqlite3.IntegrityError as e:
+        db.rollback()
+        print("Database error: " + str(e))
+        return jsonify({"error": "Database error: " + str(e)}), 500
+
+    except Exception as e:
+        db.rollback()
+        print("Server error: " + str(e))
+        return jsonify({"error": "Server error: " + str(e)}), 500
 
 @quiz_bp.route('/questions/<int:question_id>', methods=['PUT'])
 def update_question(question_id):
@@ -166,17 +202,31 @@ def update_question(question_id):
             if current_position < new_position:
                 # Shift positions down for questions between current and new position
                 cursor.execute("""
-                UPDATE questions
-                SET position = position - 1
-                WHERE position > ? AND position <= ?
+                SELECT MAX(position) FROM questions WHERE position > ? AND position <= ?
                 """, (current_position, new_position))
+                max_position = cursor.fetchone()[0]
+
+                if max_position is not None:
+                    for pos in range(max_position, current_position, -1):
+                        cursor.execute("""
+                        UPDATE questions
+                        SET position = position - 1
+                        WHERE position = ?
+                        """, (pos,))
             else:
                 # Shift positions up for questions between new and current position
                 cursor.execute("""
-                UPDATE questions
-                SET position = position + 1
-                WHERE position >= ? AND position < ?
+                SELECT MIN(position) FROM questions WHERE position >= ? AND position < ?
                 """, (new_position, current_position))
+                min_position = cursor.fetchone()[0]
+
+                if min_position is not None:
+                    for pos in range(min_position, current_position):
+                        cursor.execute("""
+                        UPDATE questions
+                        SET position = position + 1
+                        WHERE position = ?
+                        """, (pos,))
 
             # Update the question's position to the new value
             cursor.execute("UPDATE questions SET position = ? WHERE question_id = ?", (new_position, question_id))
@@ -218,21 +268,40 @@ def delete_question(question_id):
     cursor = db.cursor()
 
     # Fetch the current position and check if the question exists
-    cursor.execute("SELECT * FROM questions WHERE question_id = ?", (question_id,))
+    cursor.execute("SELECT position FROM questions WHERE question_id = ?", (question_id,))
     result = cursor.fetchone()
 
     if result is None:
         return jsonify({"error": "Question not found"}), 404
 
+    current_position = result[0]
 
-    db = get_db()
-    cursor = db.cursor()
+    try:
+        # Start a transaction
+        db.execute("BEGIN")
 
-    cursor.execute("DELETE FROM questions WHERE question_id = ?", (question_id,))
-    cursor.execute("DELETE FROM answers WHERE question_id = ?", (question_id,))
-    
-    db.commit()
-    return "", 204
+        # Delete the question and its answers
+        cursor.execute("DELETE FROM questions WHERE question_id = ?", (question_id,))
+        cursor.execute("DELETE FROM answers WHERE question_id = ?", (question_id,))
+
+        # Shift positions down for questions after the deleted position
+        cursor.execute("""
+        UPDATE questions
+        SET position = position - 1
+        WHERE position > ?
+        """, (current_position,))
+
+        # Commit the transaction
+        db.commit()
+        return "", 204
+
+    except sqlite3.IntegrityError as e:
+        db.rollback()
+        return jsonify({"error": "Database error: " + str(e)}), 500
+
+    except Exception as e:
+        db.rollback()
+        return jsonify({"error": "Server error: " + str(e)}), 500
 
 @quiz_bp.route('/questions/all', methods=['DELETE'])
 def delete_all_questions():
