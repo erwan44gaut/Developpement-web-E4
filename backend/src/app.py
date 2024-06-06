@@ -1,10 +1,12 @@
 from flask import Flask
+from flask_cors import CORS
 from config import Config
 from routes.quiz import quiz_bp
 from routes.auth import auth_bp
 from routes.db import db_bp
 
 app = Flask(__name__)
+CORS(app)
 app.config.from_object(Config)
 
 app.register_blueprint(quiz_bp)

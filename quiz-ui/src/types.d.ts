@@ -11,9 +11,3 @@ export interface Answer {
     text: string;
     isCorrect: boolean;
 }
-
-export interface Quizz {
-    id: number;
-    question: Question;
-    answers: Answer[];
-}
