@@ -1,7 +1,9 @@
 <script setup lang="ts">
+
 </script>
 
 <template>
-  <main>
-  </main>
+  <div>
+      <h1>Admin Page</h1>
+  </div>
 </template>

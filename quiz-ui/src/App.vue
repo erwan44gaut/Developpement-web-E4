@@ -9,7 +9,7 @@ import { RouterLink, RouterView } from 'vue-router';
 			<RouterLink to="/">Home</RouterLink>
 			<RouterLink to="/play">Play</RouterLink>
 			<RouterLink to="/leadboard">Leadboard</RouterLink>
-			<RouterLink to="/admin">Admin</RouterLink>
+			<RouterLink to="/login">Admin</RouterLink>
 		</nav>
 		<RouterView />
 	</div>
@@ -21,6 +21,7 @@ import { RouterLink, RouterView } from 'vue-router';
 	top: 0;
 	left: 0;
 	width: 100%;
+	height: 35px;
 	background-color: var(--background-color);
 }
 

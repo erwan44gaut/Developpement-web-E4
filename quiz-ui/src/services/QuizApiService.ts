@@ -1,36 +1,16 @@
-// import axios from 'axios';
+import axios from 'axios';
+import { type Question } from '../types.d.ts';
 
-// const instance = axios.create({
-// 	baseURL: `${import.meta.env.VITE_API_URL}`,
-// 	json: true
-// });
+// Fonction pour récupérer le nombre total de questions
+export const getTotalNumberOfQuestions = async (): Promise<number> => {
+  const response = await axios.get('http://127.0.0.1:5000/quiz-info');
+  return response.data.size;
+};
 
-// export default {
-// 	async call(method, resource, data = null, token = null) {
-// 		const headers = {
-// 			'Content-Type': 'application/json',
-// 		};
-// 		if (token != null) {
-// 			headers.authorization = `Bearer ${ token}`;
-// 		}
-
-// 		return instance({
-// 			method,
-// 			headers: headers,
-// 			url: resource,
-// 			data,
-// 		})
-// 			.then((response) => {
-// 				return { status: response.status, data: response.data };
-// 			})
-// 			.catch((error) => {
-// 				console.error(error);
-// 			});
-// 	},
-// 	getQuizInfo() {
-// 		return this.call('get', 'quiz-info');
-// 	},
-// 	getQuestion(position) {
-// 		// not implemented
-// 	}
-// };
+// Fonction pour récupérer une question par position
+export const getQuestionByPosition = async (position: number): Promise<Question> => {
+  const response = await axios.get('http://127.0.0.1:5000/questions', {
+    params: { position }
+  });
+  return response.data;
+};

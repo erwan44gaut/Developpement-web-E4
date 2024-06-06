@@ -1,17 +1,13 @@
 export interface Question {
-    id: number;
-    label: string;
-    type: number;
+    question_id: number;
+    text: string;
+    image?: string;
+    position: number;
+    answers: Answer[];
 }
 
 export interface Answer {
-    id: number;
-    label: string;
-    value: number;
-}
-
-export interface Quizz {
-    id: number;
-    question: Question;
-    answers: Answer[];
+    answer_id: number;
+    text: string;
+    isCorrect: boolean;
 }
