@@ -11,8 +11,9 @@ import Dialog from 'primevue/dialog';
 import InputText from 'primevue/inputtext';
 import RadioButton from 'primevue/radiobutton';
 import SelectButton from 'primevue/selectbutton';
-import TabPanel from 'primevue/tabpanel';
 import TabView from 'primevue/tabview';
+import Password from 'primevue/password';
+
 
 import 'primeicons/primeicons.css';
 import 'primevue/resources/primevue.min.css';
@@ -28,8 +29,8 @@ app.component('VueInputText', InputText);
 app.component('VueDialog', Dialog);
 app.component('VueRadioButton', RadioButton);
 app.component('VueTabView', TabView);
-app.component('VueTabPanel', TabPanel);
 app.component('VueCheckbox', Checkbox);
 app.component('VueSelectButton', SelectButton);
+app.component('VuePassword', Password);
 
 app.mount('#app');
