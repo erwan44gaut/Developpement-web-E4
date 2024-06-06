@@ -1,12 +1,6 @@
-<<<<<<< HEAD
-<template>
-  <div>
-    <QuestionsManager />
-  </div>
-=======
 <script setup lang="ts">
-import QuizzManager from '@/components/Play/QuizzManager.vue';
-import type { Quizz } from '@/types';
+import { type Quizz, } from '@/types';
+import { ref } from 'vue';
 
 const quizzList: Quizz[] = ([
 	{
@@ -36,29 +30,28 @@ const quizzList: Quizz[] = ([
 			{ id: 7, label: '5', value: 3 },
 			{ id: 8, label: '6', value: 4 }
 		]
-	},
-	{
-		id: 3,
-		question: {
-			id: 3,
-			label: 'Is the earth flat?',
-			type: 3
-		},
-		answers: [
-			{ id: 9, label: 'True', value: 1 },
-			{ id:10, label: 'False', value: 2 }
-		]
 	}
 ]);
+
+const computingResult = ref(true);
 </script>
 
 <template>
-  <main>
-    <QuizzManager :quizzList="quizzList" />
-  </main>
->>>>>>> 757bd3b9d0e29577482548fa9fd6464298ca5d4e
+    <VueTabView class="tab_view">
+        <VueTabPanel header="Play Quizz">
+            <VueQuizzManager :quizz-list="quizzList"></VueQuizzManager>
+            <VueButton id="result-button" label="See my results" :disabled="computingResult"/>
+        </VueTabPanel>
+        <VueTabPanel header="Results">
+        </VueTabPanel>
+        <VueTabPanel header="Edit Quizz">
+        </VueTabPanel>
+    </VueTabView>
 </template>
 
-<script setup lang="ts">
-import QuestionsManager from '../components/QuestionsManager.vue';
-</script>
+<style scoped>
+#result-button {
+    width: 100%;
+    margin-top: 2em;
+}
+</style>
