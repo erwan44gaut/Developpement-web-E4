@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { type Question } from '../types.d.ts';
+import { type Question } from '../types.d';
 
 // Fonction pour récupérer le nombre total de questions
 export const getTotalNumberOfQuestions = async (): Promise<number> => {

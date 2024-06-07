@@ -20,8 +20,10 @@ const answerPositions = ref<number[]>([]);
 
 // Fonction pour charger une question en fonction de sa position
 const loadQuestionByPosition = async (position: number) => {
+	console.log('load new questions');
 	try {
 		currentQuestion.value = await getQuestionByPosition(position);
+		console.log(currentQuestion.value);
 	} catch (error) {
 		console.error('Error loading question:', error);
 	}
@@ -31,9 +33,12 @@ const loadQuestionByPosition = async (position: number) => {
 const answerClickedHandler = (answerIndex: number) => {
 	answerPositions.value.push(answerIndex + 1);// Ajouter la position de la réponse à la liste
 	console.log('Answer clicked at position:', answerIndex + 1);
+	console.log('Current position : ', currentQuestionPosition.value);
 	const nextPosition = currentQuestionPosition.value + 1;
 	if (nextPosition <= totalNumberOfQuestions.value) {
+		console.log('Load question position : ', nextPosition);
 		loadQuestionByPosition(nextPosition);
+		currentQuestionPosition.value += 1;
 	} else {
 		endQuiz();
 	}
