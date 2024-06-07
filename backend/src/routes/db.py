@@ -45,10 +45,8 @@ def rebuild_db():
     CREATE TABLE participation_answers (
         participation_answer_id INTEGER PRIMARY KEY AUTOINCREMENT,
         participation_id INTEGER NOT NULL,
-        question_id INTEGER NOT NULL,
         answer_id INTEGER NOT NULL,
         FOREIGN KEY (participation_id) REFERENCES participations (participation_id),
-        FOREIGN KEY (question_id) REFERENCES questions (question_id),
         FOREIGN KEY (answer_id) REFERENCES answers (answer_id)
     )
     """)

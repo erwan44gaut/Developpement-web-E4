@@ -69,19 +69,30 @@ def get_question_by_position():
 def submit_participation():
     db = get_db()
     payload = request.get_json()
-    username = payload['username']
+    username = payload['playerName']
     answers = payload['answers']
 
     cursor = db.cursor()
+    cursor.execute("SELECT question_id FROM questions ORDER BY position")
+    questions = cursor.fetchall()
+    
+    if(len(questions)>len(answers)):
+        return 'Participation incomplete', 400
+    
+    if(len(questions)<len(answers)):
+        return 'Participation overcomplete', 400
+    
     correct_answers = 0
-
-    for answer in answers:
-        question_id = answer['question_id']
-        answer_id = answer['answer_id']
-        cursor.execute("SELECT is_correct FROM answers WHERE answer_id = ?", (answer_id,))
-        is_correct = cursor.fetchone()[0]
-        if is_correct:
-            correct_answers += 1
+    answers_id = []
+    print(questions)
+    for i in range(len(answers)) :
+        cursor.execute("SELECT answer_id, is_correct FROM answers WHERE question_id = ?", questions[i])
+        answers_per_question = cursor.fetchall()
+        answer_id, isCorrect = answers_per_question[answers[i]-1]
+        if isCorrect :
+            correct_answers+=1
+        answers_id.append(answer_id)
+        
 
     score = correct_answers
     timestamp = datetime.datetime.now()
@@ -90,12 +101,12 @@ def submit_participation():
                    (username, score, timestamp))
     participation_id = cursor.lastrowid
 
-    for answer in answers:
-        cursor.execute("INSERT INTO participation_answers (participation_id, question_id, answer_id) VALUES (?, ?, ?)", 
-                       (participation_id, answer['question_id'], answer['answer_id']))
+    for i in range (len(answers)):
+        cursor.execute("INSERT INTO participation_answers (participation_id, answer_id) VALUES (?, ?)", 
+                       (participation_id, answers_id[i]))
     
     db.commit()
-    return jsonify({"message": "Participation submitted successfully", "score": score}), 201
+    return jsonify({"message": "Participation submitted successfully", "score": score}), 200
 
 @quiz_bp.route('/questions', methods=['POST'])
 def create_question():
