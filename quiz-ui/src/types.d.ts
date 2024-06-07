@@ -1,9 +1,10 @@
 export interface Question {
-    question_id: number;
+    id: number;
+    title:string;
     text: string;
     image?: string;
     position: number;
-    answers: Answer[];
+    possibleAnswers: Answer[];
 }
 
 export interface Answer {

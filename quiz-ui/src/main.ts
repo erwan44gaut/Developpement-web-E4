@@ -13,6 +13,8 @@ import RadioButton from 'primevue/radiobutton';
 import SelectButton from 'primevue/selectbutton';
 import TabView from 'primevue/tabview';
 import Password from 'primevue/password';
+import Image from 'primevue/image';
+
 
 
 import 'primeicons/primeicons.css';
@@ -32,5 +34,6 @@ app.component('VueTabView', TabView);
 app.component('VueCheckbox', Checkbox);
 app.component('VueSelectButton', SelectButton);
 app.component('VuePassword', Password);
+app.component('VueImage', Image);
 
 app.mount('#app');
