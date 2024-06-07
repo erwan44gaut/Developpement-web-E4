@@ -14,7 +14,7 @@ def get_quiz_info():
     quiz_size = cursor.fetchone()[0]
 
     cursor.execute("""
-    SELECT username, score
+    SELECT playerName, score
     FROM participations
     ORDER BY score DESC, timestamp ASC
     """)
@@ -97,7 +97,7 @@ def submit_participation():
     score = correct_answers
     timestamp = datetime.datetime.now()
     
-    cursor.execute("INSERT INTO participations (username, score, timestamp) VALUES (?, ?, ?)", 
+    cursor.execute("INSERT INTO participations (playerName, score, timestamp) VALUES (?, ?, ?)", 
                    (username, score, timestamp))
     participation_id = cursor.lastrowid
 
@@ -106,7 +106,7 @@ def submit_participation():
                        (participation_id, answers_id[i]))
     
     db.commit()
-    return jsonify({"message": "Participation submitted successfully", "score": score}), 200
+    return jsonify({"message": "Participation submitted successfully", "score": score, "playerName":username}), 200
 
 @quiz_bp.route('/questions', methods=['POST'])
 def create_question():
