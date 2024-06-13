@@ -7,10 +7,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import QuestionDisplay from './QuestionsDisplay.vue';
-import { getTotalNumberOfQuestions, getQuestionByPosition } from '../../services/QuizApiService.ts';
 import { type Question } from '@/types';
+import { onMounted, ref } from 'vue';
+import { getQuestionByPosition, getTotalNumberOfQuestions } from '../../services/QuizApiService';
+import QuestionDisplay from './QuestionsDisplay.vue';
 
 // Variables réactives
 const currentQuestion = ref<Question | null>(null);
@@ -28,7 +28,6 @@ const loadQuestionByPosition = async (position: number) => {
 
 // Gestionnaire de clic de réponse
 const answerClickedHandler = (index: number) => {
-	console.log('Answer clicked:', index);
 	if (currentQuestionPosition.value < totalNumberOfQuestions.value) {
 		currentQuestionPosition.value++;
 		loadQuestionByPosition(currentQuestionPosition.value);
@@ -39,7 +38,6 @@ const answerClickedHandler = (index: number) => {
 
 // Fonction pour terminer le quiz
 const endQuiz = () => {
-	console.log('Quiz ended');
 	// Logique pour terminer le quiz
 };
 

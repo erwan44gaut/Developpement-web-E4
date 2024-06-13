@@ -24,7 +24,7 @@ module.exports = {
 		'no-multi-spaces': 'error', // Pas de multiples espaces consécutifs
 
 		// Règles de bonnes pratiques
-		'no-console': 'warn', // Interdire l'utilisation de console.log() et autres dans le code de production
+		'no-console': ['error', { 'allow': ['warn', 'error'] }],
 		'prefer-const': 'error', // Utiliser const lorsque la variable ne sera pas réassignée
 		'prefer-template': 'error', // Utiliser les templates strings (`${variable}`)
 		'no-useless-concat': 'error', // Éviter les concaténations inutiles de chaînes de caractères

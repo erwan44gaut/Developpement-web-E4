@@ -16,12 +16,12 @@
 import { ref, defineProps, defineEmits } from 'vue';
 import { type Question, type Answer } from '@/types';
 
-const props = defineProps<{ question: Question | null }>();
+defineProps<{ question: Question | null }>();
 const emit = defineEmits(['answer-clicked']);
 const selectedAnswer = ref<Answer | null>(null);
 
 const selectAnswer = (answer: Answer) => {
-emit('answer-clicked', answer.answer_id);
+	emit('answer-clicked', answer.answer_id);
 };
 </script>
 
