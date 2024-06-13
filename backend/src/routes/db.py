@@ -18,6 +18,7 @@ def rebuild_db():
     cursor.execute("""
     CREATE TABLE questions (
         question_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        question_title TEXT NOT NULL,
         question_text TEXT NOT NULL,
         image_url TEXT,
         position INTEGER NOT NULL UNIQUE
@@ -35,7 +36,7 @@ def rebuild_db():
     cursor.execute("""
     CREATE TABLE participations (
         participation_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT NOT NULL,
+        playerName TEXT NOT NULL,
         score INTEGER NOT NULL,
         timestamp DATETIME NOT NULL
     )
@@ -44,10 +45,8 @@ def rebuild_db():
     CREATE TABLE participation_answers (
         participation_answer_id INTEGER PRIMARY KEY AUTOINCREMENT,
         participation_id INTEGER NOT NULL,
-        question_id INTEGER NOT NULL,
         answer_id INTEGER NOT NULL,
         FOREIGN KEY (participation_id) REFERENCES participations (participation_id),
-        FOREIGN KEY (question_id) REFERENCES questions (question_id),
         FOREIGN KEY (answer_id) REFERENCES answers (answer_id)
     )
     """)
