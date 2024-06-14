@@ -17,3 +17,8 @@ export interface Participation {
     answers: number[];
     playerName: string;
 }
+
+export interface Score {
+    playerName: string;
+    score: number;
+}
