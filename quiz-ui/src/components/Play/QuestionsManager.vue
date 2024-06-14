@@ -7,9 +7,9 @@
 </template>
 
 <script setup lang="ts">
-import { type Question } from '@/types';
+import { type Question, type Participation } from '@/types';
 import { onMounted, ref } from 'vue';
-import { getQuestionByPosition, getTotalNumberOfQuestions } from '../../services/QuizApiService';
+import { getQuestionByPosition, getTotalNumberOfQuestions, saveScore } from '../../services/QuizApiService';
 import QuestionDisplay from './QuestionsDisplay.vue';
 
 // Variables réactives
@@ -46,9 +46,20 @@ const answerClickedHandler = (answerIndex: number) => {
 
 
 // Fonction pour terminer le quiz
-const endQuiz = () => {
+const endQuiz = async () => {
 	console.log('Quiz ended');
 	console.log('Answer positions:', answerPositions.value); // Afficher les positions des réponses
+	const participation: Participation = {
+		answers: answerPositions.value,
+		playerName: 'Thomas'
+	};
+
+	try {
+		await saveScore(participation);
+		console.log('Score saved successfully');
+	} catch (error) {
+		console.error('Failed to save score', error);
+	}
 	// Logique pour terminer le quiz
 };
 
