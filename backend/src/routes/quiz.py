@@ -209,35 +209,35 @@ def update_question(question_id):
             # Temporarily set the position to a unique value to avoid conflicts
             temp_position = -1
             cursor.execute("UPDATE questions SET position = ? WHERE question_id = ?", (temp_position, question_id))
-
             if current_position < new_position:
                 # Shift positions down for questions between current and new position
-                cursor.execute("""
-                SELECT MAX(position) FROM questions WHERE position > ? AND position <= ?
-                """, (current_position, new_position))
-                max_position = cursor.fetchone()[0]
-
-                if max_position is not None:
-                    for pos in range(max_position, current_position, -1):
-                        cursor.execute("""
-                        UPDATE questions
-                        SET position = position - 1
-                        WHERE position = ?
-                        """, (pos,))
+                #cursor.execute("""
+                #SELECT MAX(position) FROM questions WHERE position > ? AND position <= ?
+                #""", (current_position, new_position))
+                #max_position = cursor.fetchone()[0]
+                #if max_position is not None:
+                    #for pos in range(max_position, current_position, -1):
+                for pos in range(current_position+1,new_position+1) :
+                    cursor.execute("""
+                    UPDATE questions
+                    SET position = position - 1
+                    WHERE position = ?
+                    """, (pos,))
             else:
                 # Shift positions up for questions between new and current position
-                cursor.execute("""
-                SELECT MIN(position) FROM questions WHERE position >= ? AND position < ?
-                """, (new_position, current_position))
-                min_position = cursor.fetchone()[0]
-
-                if min_position is not None:
-                    for pos in range(min_position, current_position):
-                        cursor.execute("""
-                        UPDATE questions
-                        SET position = position + 1
-                        WHERE position = ?
-                        """, (pos,))
+                #cursor.execute("""
+                #SELECT MAX(position) FROM questions WHERE position >= ? AND position < ?
+                #""", (new_position, current_position))
+                #max_position = cursor.fetchone()[0]
+                #print("min position :"+str(max_position))
+                #if max_position is not None:
+                for pos in range(current_position-1, new_position-1,-1):
+                    print("pos ::" +str(pos))
+                    cursor.execute("""
+                    UPDATE questions
+                    SET position = position + 1
+                    WHERE position = ?
+                    """, (pos,))
 
             # Update the question's position to the new value
             cursor.execute("UPDATE questions SET position = ? WHERE question_id = ?", (new_position, question_id))
@@ -294,14 +294,19 @@ def delete_question(question_id):
         # Delete the question and its answers
         cursor.execute("DELETE FROM questions WHERE question_id = ?", (question_id,))
         cursor.execute("DELETE FROM answers WHERE question_id = ?", (question_id,))
-
-        # Shift positions down for questions after the deleted position
+        
         cursor.execute("""
-        UPDATE questions
-        SET position = position - 1
-        WHERE position > ?
-        """, (current_position,))
-
+            SELECT MAX(position) FROM questions """, )
+        max_position = cursor.fetchone()[0]
+        # Shift positions down for questions after the deleted position
+        # Verify is there is still values after ther delete
+        if max_position :
+            for pos in range (current_position+1,max_position+1) :
+                cursor.execute("""
+                UPDATE questions
+                SET position = position - 1
+                WHERE position = ?
+                """, (pos,))
         # Commit the transaction
         db.commit()
         return "", 204
