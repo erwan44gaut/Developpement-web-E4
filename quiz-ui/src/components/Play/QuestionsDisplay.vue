@@ -20,13 +20,7 @@ defineProps<{ question: Question | null }>();
 const emit = defineEmits(['answer-clicked']);
 const selectedAnswer = ref<Answer | null>(null);
 
-<<<<<<< HEAD
-const selectAnswer = (answer: Answer) => {
-	emit('answer-clicked', answer.answer_id);
-};
-=======
 const selectAnswer = (index: number) => { emit('answer-clicked', index); };
->>>>>>> 514e048737177fac95cd616b9198dd8bf3037738
 </script>
 
 <style scoped>
