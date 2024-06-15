@@ -236,6 +236,12 @@ def update_question(question_id):
         """, (question_title, question_text, image_url, question_id))
 
         # Delete existing answers and insert the new ones
+        cursor.execute("""
+            DELETE FROM participation_answers 
+            WHERE answer_id IN (
+                SELECT answer_id FROM answers WHERE question_id = ?
+            )
+        """, (question_id,))
         cursor.execute("DELETE FROM answers WHERE question_id = ?", (question_id,))
         for answer in possible_answers:
             cursor.execute("""
