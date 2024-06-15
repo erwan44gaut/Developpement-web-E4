@@ -88,65 +88,12 @@ export const saveScore = async (participation: Participation): Promise<number | 
 	}
 };
 
-//  Fonction pour récupérer le dernier score du joueur
-export const getLastScorePlayer = async (playerName: string): Promise<number | null> => {
-	try {
-		const response = await axios.get('http://127.0.0.1:5000/quiz-info');
-		const scores: Score[] = response.data.scores;
-
-		const playerScore = scores.find(score => score.playerName === playerName);
-		
-		return playerScore ? playerScore.score : null;
-	} catch (error) {
-		console.error('Error fetching scores:', error);
-		throw error;
-	}
-};
-
-export const getAllScoresForPlayer = async (playerName: string): Promise<number[]> => {
-	try {
-		const response = await axios.get('http://127.0.0.1:5000/quiz-info');
-		const scores: Score[] = response.data.scores;
-
-		const playerScores = scores
-			.filter(score => score.playerName === playerName)
-			.map(score => score.score)
-			.sort((a, b) => b - a); // Trier les scores en ordre décroissant
-		
-		return playerScores;
-	} catch (error) {
-		console.error('Error fetching scores:', error);
-		throw error;
-	}
-};
-
 export const getAllScores = async (): Promise<Score[]> => {
 	try {
 		const response = await axios.get('http://127.0.0.1:5000/quiz-info');
 		const scores: Score[] = response.data.scores;
 		
 		return scores;
-	} catch (error) {
-		console.error('Error fetching scores:', error);
-		throw error;
-	}
-};
-
-export const getBestScoreForPlayer = async (playerName: string): Promise<number | null> => {
-	try {
-		const response = await axios.get('http://127.0.0.1:5000/quiz-info');
-		const scores: Score[] = response.data.scores;
-
-		const playerScores = scores
-			.filter(score => score.playerName === playerName)
-			.map(score => score.score);
-
-		if (playerScores.length === 0) {
-			return null;
-		}
-
-		const bestScore = Math.max(...playerScores);
-		return bestScore;
 	} catch (error) {
 		console.error('Error fetching scores:', error);
 		throw error;

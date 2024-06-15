@@ -37,9 +37,9 @@ const props = defineProps({
 });
 
 // Trier les scores en ordre décroissant
-const sortedScores = computed(() => {
+/*const sortedScores = computed(() => {
 	return [...props.scores].sort((a, b) => b.score - a.score);
-});
+});*/
 
 // Faire défiler jusqu'au dernier score après le montage du composant
 onMounted(() => {
