@@ -36,7 +36,6 @@ const refreshQuestions = (question: Question) => {
 	<div>
 		<div class="editor-grid">
 			<template v-for="question in questions" :key="question.id">
-				<AddQuestion />
 				<EditorCard 
 				class="question" 
 				:question="question"
@@ -51,16 +50,14 @@ const refreshQuestions = (question: Question) => {
 
 <style scoped>
 .editor-grid {
-	margin: 1em;
 	display: grid;
 	gap: 10px;
-	grid-template-columns: repeat(6, 1fr);
+	grid-template-columns: repeat(3, 1fr);
 }
 
 .question {
   border: 1px solid rgba(0, 0, 0, 0.8);
   text-align: center;
-  padding: 10px;
 }
 
 .question:hover {

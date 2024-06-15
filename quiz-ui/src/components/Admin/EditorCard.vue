@@ -50,7 +50,7 @@ const deleteAnswer = (answer_id: number) => {
 
 const deleteQuestionEvent = () => {
 	if (props.question) {
-		// deleteQuestion(props.question);
+		deleteQuestion(props.question);
 		emits('refresh', props.question);
 	}
 };
@@ -124,5 +124,13 @@ input {
   width: 100%;
   box-sizing: border-box;
   padding: 5px;
+}
+
+.pi.pi-pencil {
+  color: #10B981;
+}
+
+.pi.pi-trash {
+  color: red;
 }
 </style>

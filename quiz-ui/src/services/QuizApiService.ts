@@ -61,7 +61,19 @@ export const deleteQuestion = async (question: Question): Promise<void> => {
 // Fonction pour créer une question
 export const createQuestion = async (question: Question): Promise<void> => {
 	try {
-		const response = await axios.post('http://127.0.0.1:5000/questions', question);
+		const token = sessionStorage.getItem('authToken');
+		if (!token) {
+			throw new Error('No auth token found');
+		}
+		const response = await axios.post(
+			'http://127.0.0.1:5000/questions',
+			question,
+			{
+				headers: {
+					'Authorization': `Bearer ${token}`
+				}
+			}
+		);
 		return response.data;
 	} catch (error) {
 		console.error('Error creating question:', error);

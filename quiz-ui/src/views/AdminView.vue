@@ -3,13 +3,15 @@ import EditorManager from '@/components/Admin/EditorManager.vue';
 </script>
 
 <template>
-  <div class="grid-container">
+  <div class="container">
     <EditorManager />
-</div>
+  </div>
 </template>
 
 <style scoped>
-.grid-container {
-
+.container {
+  max-height: 100vh;
+  overflow-y: auto;
+  padding: 10px;
 }
 </style>
