@@ -235,19 +235,25 @@ def update_question(question_id):
         WHERE question_id = ?
         """, (question_title, question_text, image_url, question_id))
 
-        # Delete existing answers and insert the new ones
-        cursor.execute("""
-            DELETE FROM participation_answers 
-            WHERE answer_id IN (
-                SELECT answer_id FROM answers WHERE question_id = ?
-            )
-        """, (question_id,))
-        cursor.execute("DELETE FROM answers WHERE question_id = ?", (question_id,))
-        for answer in possible_answers:
+        cursor.execute("SELECT answer_text, is_correct FROM answers WHERE question_id = ?",(question_id,))
+        answers = cursor.fetchall()
+        new_answers = [(answer['text'],answer['isCorrect']) for answer in possible_answers]
+        
+        # if answers has been changed
+        if answers != new_answers :
+            # Delete existing answers and insert the new ones
             cursor.execute("""
-            INSERT INTO answers (question_id, answer_text, is_correct)
-            VALUES (?, ?, ?)
-            """, (question_id, answer['text'], answer['isCorrect']))
+                DELETE FROM participation_answers 
+                WHERE answer_id IN (
+                    SELECT answer_id FROM answers WHERE question_id = ?
+                )
+            """, (question_id,))
+            cursor.execute("DELETE FROM answers WHERE question_id = ?", (question_id,))
+            for answer in possible_answers:
+                cursor.execute("""
+                INSERT INTO answers (question_id, answer_text, is_correct)
+                VALUES (?, ?, ?)
+                """, (question_id, answer['text'], answer['isCorrect']))
 
         # Commit the transaction
         db.commit()
