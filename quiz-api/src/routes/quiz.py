@@ -235,26 +235,36 @@ def update_question(question_id):
         WHERE question_id = ?
         """, (question_title, question_text, image_url, question_id))
 
-        cursor.execute("SELECT answer_text, is_correct FROM answers WHERE question_id = ?",(question_id,))
+        cursor.execute("SELECT * FROM answers WHERE question_id = ?",(question_id,))
         answers = cursor.fetchall()
+        answer_without_id = [answer[1:] for answer in answers]
         new_answers = [(answer['text'],answer['isCorrect']) for answer in possible_answers]
         
-        # if answers has been changed
-        if answers != new_answers :
-            # Delete existing answers and insert the new ones
+        if len(answers)>len(new_answers) :
+            for answer in answers :
+                if answer[1:] not in answers :
+                    cursor.execute("DELETE FROM participation_answers WHERE answer_id = ?",(answer[0]))
+                    cursor.execute("DELETE FROM answers where answer_id = ?",(answer[0],))
+                    break
+                    
+                    
+        elif len(answers)<len(new_answers) :
             cursor.execute("""
-                DELETE FROM participation_answers 
-                WHERE answer_id IN (
-                    SELECT answer_id FROM answers WHERE question_id = ?
-                )
-            """, (question_id,))
-            cursor.execute("DELETE FROM answers WHERE question_id = ?", (question_id,))
-            for answer in possible_answers:
-                cursor.execute("""
                 INSERT INTO answers (question_id, answer_text, is_correct)
                 VALUES (?, ?, ?)
-                """, (question_id, answer['text'], answer['isCorrect']))
-
+                """, (question_id, new_answers[-1]['text'], new_answers[-1]['isCorrect']))
+        
+        else :
+            for index,answer in answers.items():
+                if answer[1:]!=new_answers[index]:
+                    cursor.execute("DELETE FROM participation_answers WHERE answer_id = ?",(answer[0]))
+                    cursor.execute("""
+                        UPDATE answers
+                        SET answer_text = ?, is_correct = ?
+                        WHERE answer_id = ?
+                        """, (new_answers[index]['text'],new_answers[index]['isCorrect'],answer[0]))
+                    break
+                
         # Commit the transaction
         db.commit()
         return "", 204
