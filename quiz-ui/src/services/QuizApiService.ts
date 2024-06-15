@@ -16,10 +16,10 @@ export const getQuestionByPosition = async (position: number): Promise<Question>
 };
 
 // Fonction pour enregistrer un score
-export const saveScore = async (participation: Participation): Promise<void> => {
+export const saveScore = async (participation: Participation): Promise<number | null> => {
 	try {
 		const response = await axios.post('http://127.0.0.1:5000/participations', participation);
-		return response.data;
+		return response.data.score;
 	} catch (error) {
 		console.error('Error saving score:', error);
 		throw error;

@@ -9,8 +9,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import GlobalRanking from '../components/Play/GlobalRanking.vue';
-import GlobalChart from '../components/Play/GlobalChart.vue';
+import GlobalRanking from '../components/LeadBoard/GlobalRanking.vue';
+import GlobalChart from '../components/LeadBoard/GlobalChart.vue';
 import { getAllScores } from '@/services/QuizApiService';
 import { type Score } from '@/types';
 
