@@ -1,4 +1,4 @@
-#!/home/erwan/dev/Cours/Developpement-web-E4/backend/.venv/bin/python
+#!/home/erwan/dev/Cours/Developpement-web-E4/quiz-api/.venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys

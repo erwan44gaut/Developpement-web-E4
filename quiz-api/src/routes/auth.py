@@ -8,14 +8,18 @@ auth_bp = Blueprint('auth', __name__)
 def login():
     payload = request.get_json()
     password = payload.get('password')
+    print(password)
 
     # Convertir le mot de passe en hash md5
     hash_object = hashlib.md5(password.encode())
     password_hash = hash_object.hexdigest()
 
+    print(password_hash)
+    print(current_app.config['SECRET_KEY_HASH'])
     # Comparer le hash du mot de passe fourni avec le hash stocké
     if password_hash == current_app.config['SECRET_KEY_HASH']:
         token = utils.jwt_utils.build_token()
+        print("token: ", token)
         return jsonify({'token': token}), 200
     else:
         return 'Unauthorized', 401

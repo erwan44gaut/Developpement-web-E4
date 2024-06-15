@@ -1,25 +1,25 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { authenticate } from '@/services/QuizApiService';
 
 const visible = ref(true);
 const password = ref('');
-const correctPassword = 'test';
 const router = useRouter();
 let flag: boolean = false;
 
-const validatePassword = () => {
-	if (password.value == correctPassword) {
-		visible.value = false;
-		flag = true;
-		router.push({
-			name: 'admin'
-		});
-	} else {
+const validatePassword = async () => {
+	try {
+		const result = await authenticate(password.value);
+		if (result) {
+			sessionStorage.setItem('authToken', result);
+			visible.value = false;
+			flag = true;
+			router.push({ name: 'admin' });
+		}
+	} catch (error) {
 		alert('Incorrect password');
-		router.push({
-			name: 'home'
-		});
+		router.push({ name: 'home' });
 	}
 };
 

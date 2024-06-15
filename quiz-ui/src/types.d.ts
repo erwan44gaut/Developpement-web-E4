@@ -22,3 +22,8 @@ export interface Score {
     playerName: string;
     score: number;
 }
+
+export interface QuizInfo {
+    scores: Score[];
+    size: number;
+}
