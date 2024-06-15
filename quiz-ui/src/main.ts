@@ -14,6 +14,7 @@ import SelectButton from 'primevue/selectbutton';
 import TabView from 'primevue/tabview';
 import Password from 'primevue/password';
 import Image from 'primevue/image';
+import Chart from 'primevue/chart'
 
 import ScrollPanel from 'primevue/scrollpanel';
 import DataTable from 'primevue/datatable';
@@ -42,5 +43,6 @@ app.component('VueImage', Image);
 app.component('VueScrollPanel', ScrollPanel);
 app.component('VueDataTable', DataTable);
 app.component('VueColumn', Column);
+app.component('VueChart', Chart);
 
 app.mount('#app');

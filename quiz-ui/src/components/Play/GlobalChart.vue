@@ -1,12 +1,11 @@
 <template>
     <div class="chart-container">
-      <Chart type="bar" :data="chartData" :options="chartOptions"></Chart>
+      <VueChart type="bar" :data="chartData" :options="chartOptions"></VueChart>
     </div>
 </template>
   
 <script setup lang="ts">
 import { ref } from 'vue';
-import Chart from 'primevue/chart';
   
 // Données pour le graphique
 const chartData = ref({
