@@ -210,13 +210,6 @@ def update_question(question_id):
             temp_position = -1
             cursor.execute("UPDATE questions SET position = ? WHERE question_id = ?", (temp_position, question_id))
             if current_position < new_position:
-                # Shift positions down for questions between current and new position
-                #cursor.execute("""
-                #SELECT MAX(position) FROM questions WHERE position > ? AND position <= ?
-                #""", (current_position, new_position))
-                #max_position = cursor.fetchone()[0]
-                #if max_position is not None:
-                    #for pos in range(max_position, current_position, -1):
                 for pos in range(current_position+1,new_position+1) :
                     cursor.execute("""
                     UPDATE questions
@@ -224,13 +217,6 @@ def update_question(question_id):
                     WHERE position = ?
                     """, (pos,))
             else:
-                # Shift positions up for questions between new and current position
-                #cursor.execute("""
-                #SELECT MAX(position) FROM questions WHERE position >= ? AND position < ?
-                #""", (new_position, current_position))
-                #max_position = cursor.fetchone()[0]
-                #print("min position :"+str(max_position))
-                #if max_position is not None:
                 for pos in range(current_position-1, new_position-1,-1):
                     print("pos ::" +str(pos))
                     cursor.execute("""
@@ -293,6 +279,12 @@ def delete_question(question_id):
 
         # Delete the question and its answers
         cursor.execute("DELETE FROM questions WHERE question_id = ?", (question_id,))
+        cursor.execute("""
+            DELETE FROM participation_answers 
+            WHERE answer_id IN (
+                SELECT answer_id FROM answers WHERE question_id = ?
+            )
+        """, (question_id,))
         cursor.execute("DELETE FROM answers WHERE question_id = ?", (question_id,))
         
         cursor.execute("""
@@ -330,6 +322,7 @@ def delete_all_questions():
 
     cursor.execute("DELETE FROM questions")
     cursor.execute("DELETE FROM answers")
+    cursor.execute("DELETE FROM participation_answers")
 
     db.commit()
     return "", 204
@@ -348,3 +341,4 @@ def delete_all_participations():
 
     db.commit()
     return "", 204
+
