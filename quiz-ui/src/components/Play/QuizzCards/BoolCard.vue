@@ -14,13 +14,13 @@ const props = defineProps({
 });
 
 const selectedCategory = ref('');
-const options = ref(props.answers.map(answer => answer.label));
+const options = ref(props.answers.map(answer => answer.text));
 </script>
 
 <template>
   <div class="quizz-card">
     <div class="question">
-      {{ question.label }}
+      {{ question.text }}
     </div>
     <VueSelectButton v-model="selectedCategory" :options="options" aria-labelledby="basic" />
   </div>

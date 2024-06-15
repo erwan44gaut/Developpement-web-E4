@@ -15,6 +15,10 @@ import TabView from 'primevue/tabview';
 import Password from 'primevue/password';
 import Image from 'primevue/image';
 
+import ScrollPanel from 'primevue/scrollpanel';
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+
 
 
 import 'primeicons/primeicons.css';
@@ -35,5 +39,8 @@ app.component('VueCheckbox', Checkbox);
 app.component('VueSelectButton', SelectButton);
 app.component('VuePassword', Password);
 app.component('VueImage', Image);
+app.component('VueScrollPanel', ScrollPanel);
+app.component('VueDataTable', DataTable);
+app.component('VueColumn', Column);
 
 app.mount('#app');

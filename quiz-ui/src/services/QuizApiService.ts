@@ -41,7 +41,6 @@ export const getLastScorePlayer = async (playerName: string): Promise<number | n
 	}
 };
 
-// Fonction pour récupérer tous les scores du joueur
 export const getAllScoresForPlayer = async (playerName: string): Promise<number[]> => {
 	try {
 		const response = await axios.get('http://127.0.0.1:5000/quiz-info');
@@ -49,9 +48,22 @@ export const getAllScoresForPlayer = async (playerName: string): Promise<number[
 
 		const playerScores = scores
 			.filter(score => score.playerName === playerName)
-			.map(score => score.score);
+			.map(score => score.score)
+			.sort((a, b) => b - a); // Trier les scores en ordre décroissant
 		
 		return playerScores;
+	} catch (error) {
+		console.error('Error fetching scores:', error);
+		throw error;
+	}
+};
+
+export const getAllScores = async (): Promise<Score[]> => {
+	try {
+		const response = await axios.get('http://127.0.0.1:5000/quiz-info');
+		const scores: Score[] = response.data.scores;
+		
+		return scores;
 	} catch (error) {
 		console.error('Error fetching scores:', error);
 		throw error;

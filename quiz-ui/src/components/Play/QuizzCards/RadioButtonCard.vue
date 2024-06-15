@@ -19,11 +19,11 @@ const selectedCategory = ref('');
 <template>
   <div class="quizz-card">
     <div class="question">
-      {{ question.label }}
+      {{ question.text }}
     </div>
-    <div class="answers" v-for="answer in answers" :key="answer.id">
-      <VueRadioButton class="radio" v-model="selectedCategory" name="dynamic" :value="answer.label" />
-      <label>{{ answer.label }}</label>
+    <div class="answers" v-for="answer in answers" :key="answer.answer_id">
+      <VueRadioButton class="radio" v-model="selectedCategory" name="dynamic" :value="answer.text" />
+      <label>{{ answer.text }}</label>
     </div>
   </div>
 </template>
