@@ -178,6 +178,7 @@ def create_question():
 
 @quiz_bp.route('/questions/<int:question_id>', methods=['PUT'])
 def update_question(question_id):
+    print("a")
     auth_header = request.headers.get('Authorization')
     if not auth_header or not utils.jwt_utils.decode_token(auth_header):
         return jsonify({"error": "Unauthorized"}), 401
@@ -235,15 +236,16 @@ def update_question(question_id):
         WHERE question_id = ?
         """, (question_title, question_text, image_url, question_id))
 
-        cursor.execute("SELECT * FROM answers WHERE question_id = ?",(question_id,))
+        cursor.execute("SELECT answer_id,answer_text,is_correct FROM answers WHERE question_id = ?",(question_id,))
         answers = cursor.fetchall()
         answer_without_id = [answer[1:] for answer in answers]
         new_answers = [(answer['text'],answer['isCorrect']) for answer in possible_answers]
         
+        #Delete answer
         if len(answers)>len(new_answers) :
             for answer in answers :
                 if answer[1:] not in answers :
-                    cursor.execute("DELETE FROM participation_answers WHERE answer_id = ?",(answer[0]))
+                    cursor.execute("DELETE FROM participation_answers WHERE answer_id = ?",(answer[0],))
                     cursor.execute("DELETE FROM answers where answer_id = ?",(answer[0],))
                     break
                     
@@ -252,17 +254,17 @@ def update_question(question_id):
             cursor.execute("""
                 INSERT INTO answers (question_id, answer_text, is_correct)
                 VALUES (?, ?, ?)
-                """, (question_id, new_answers[-1]['text'], new_answers[-1]['isCorrect']))
+                """, (question_id, new_answers[-1][0], new_answers[-1][1]))
         
         else :
-            for index,answer in answers.items():
+            for index,answer in enumerate(answers):
                 if answer[1:]!=new_answers[index]:
-                    cursor.execute("DELETE FROM participation_answers WHERE answer_id = ?",(answer[0]))
+                    cursor.execute("DELETE FROM participation_answers WHERE answer_id = ?",(answer[0],))
                     cursor.execute("""
                         UPDATE answers
                         SET answer_text = ?, is_correct = ?
                         WHERE answer_id = ?
-                        """, (new_answers[index]['text'],new_answers[index]['isCorrect'],answer[0]))
+                        """, (new_answers[index][0],new_answers[index][1],answer[0],))
                     break
                 
         # Commit the transaction
