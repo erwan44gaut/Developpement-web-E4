@@ -1,9 +1,9 @@
 <template>
     <div class="avatar-selector">
-	  <button type="button" :class="['nes-btn is-primary']" @click="nextAvatar">prev</button>
+	  <button type="button" :class="['nes-btn is-primary']" @click="nextAvatar"><</button>
       <AvatarDisplay v-if="currentAvatar" :src="currentAvatar.src" :name="currentAvatar.name" />
       <div v-else>Loading...</div>
-	  <button type="button" :class="['nes-btn is-primary']" @click="nextAvatar">next</button>
+	  <button type="button" :class="['nes-btn is-primary']" @click="nextAvatar">></button>
     </div>
   </template>
   
@@ -63,7 +63,7 @@ onMounted(fetchAvatars);
   <style scoped>
   .avatar-selector {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
   }
   </style>

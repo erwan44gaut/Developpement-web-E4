@@ -6,14 +6,13 @@
       <button type="button" :class="['nes-btn is-primary', {'is-disabled': isDisabled || playerName === ''}]" @click="selectUser" :disabled="isDisabled || playerName === ''">Go!</button>
     </div>
     <div style="display: flex; width: 100%;">
-      <img style="height: 10rem; image-rendering: pixelated;" :src="botImage"/>
       <p style="margin-top: 2rem;">> {{ readyText }}</p>
+        <AvatarSelector>
+          <template #avatar-selected="avatar">
+            <AvatarDisplay :src="avatar.src" :name="avatar.name" />
+          </template>
+        </AvatarSelector>
     </div>
-    <AvatarSelector>
-      <template #avatar-selected="avatar">
-        <AvatarDisplay :src="avatar.src" :name="avatar.name" />
-      </template>
-    </AvatarSelector>
   </div>
 </template>
 
@@ -33,7 +32,7 @@ onMounted(() => {
     const randomNumber = Math.floor(Math.random() * 12);
     botImage.value = `/avatars/avatar_${randomNumber}.png`;
   }, 0);
-  typeText(`¤¤¤¤¤¤¤¤¤¤Ecrivez votre nom pour débuter.`, () => { });
+  typeText(`¤¤¤¤¤¤¤¤¤¤Ecrivez votre nom pour débuter.¤¤¤¤¤ N'oubliez pas de choisir votre avatar.`, () => { });
 });
 
 const selectUser = () => {
