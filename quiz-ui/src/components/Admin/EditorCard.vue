@@ -4,9 +4,13 @@ import { updateQuestion, deleteQuestion } from '@/services/QuizApiService';
 import { type Answer, type Question } from '@/types';
 import { defineProps, ref, defineEmits } from 'vue';
 
-const props = defineProps<{ question: Question | null }>();
+const props = defineProps<{ 
+    question: Question | null,
+    totalNumberOfQuestions: number
+}>();
 const editingAnswerId = ref<number | null>(null);
-const emits = defineEmits(['refresh']);
+const newPosition = ref<number | null>(props.question?.position ?? 0);
+const emits = defineEmits(['refresh-delete-question', 'refresh-change-position']);
 
 const startEditing = (answer_id: number) => {
 	editingAnswerId.value = answer_id;
@@ -17,6 +21,10 @@ const stopEditing = () => {
 };
 
 const saveAnswer = (answer_id: number, newText: string) => {
+	if (newText === '') {
+		alert('Answer cannot be empty');
+		return;
+	}
 	if (props.question) {
 		const answer = props.question.possibleAnswers.find(ans => ans.answer_id === answer_id);
 		if (answer) {
@@ -51,23 +59,44 @@ const deleteAnswer = (answer_id: number) => {
 const deleteQuestionEvent = () => {
 	if (props.question) {
 		deleteQuestion(props.question);
-		emits('refresh', props.question);
+		emits('refresh-delete-question', props.question);
+	}
+};
+
+const updatePosition = () => {
+	if (newPosition.value == null || newPosition.value < 1 || newPosition.value > props.totalNumberOfQuestions) {
+		alert(`Value out of range, please enter value between 1 and ${ props.totalNumberOfQuestions}`);
+		return;
+	}
+	if (props.question && newPosition.value !== null) {
+		emits('refresh-change-position', props.question.id, newPosition.value);
 	}
 };
 </script>
 
 <template>
-  <div class="card">
+<div class="card">
     <div class="question">
       <h3>{{ question?.title }}</h3>
       <p>{{ question?.text }}</p>
+      <div class="position">
+            <p>Position</p>
+            <VueInputText type="number" v-model.number="newPosition" min="1" max="props.totalNumberOfQuestions"></VueInputText>
+            <p>/{{ props.totalNumberOfQuestions }}</p>
+            <i class="pi pi-check" @click="updatePosition()"></i>
+      </div>
+	<div class="image">
+		<p>Image</p>
+		<VueInputText :value="question?.image" />
+		<i class="pi pi-check" @click="updatePosition()"></i>
     </div>
     <div class="answers">
       <div class="answer" v-for="answer in question?.possibleAnswers" :key="answer.answer_id">
         <div class="answer-text">
-          <template v-if="editingAnswerId === answer.answer_id">
-            <input type="text" v-model="answer.text" @blur="saveAnswer(answer.answer_id, answer.text)" />
-          </template>
+          <div v-if="editingAnswerId === answer.answer_id" class="foo">
+            <VueInputText type="text" v-model="answer.text" />
+            <i class="pi pi-check" @click="saveAnswer(answer.answer_id, answer.text)"></i>
+          </div>
           <template v-else>
             {{ answer.text }}
           </template>
@@ -79,10 +108,11 @@ const deleteQuestionEvent = () => {
       </div>
     </div>
     <div class="add-answer">
-		<VueButton @click="addAnswer">Add answer</VueButton>
-		<VueButton @click="deleteQuestionEvent()" severity="danger" outlined>Delete question</VueButton>
+		<VueButton @click="addAnswer" class="add-button">Add answer</VueButton>
+		<VueButton @click="deleteQuestionEvent()" severity="danger" outlined class="delete-button">Delete question</VueButton>
     </div>
   </div>
+</div>
 </template>
 
 <style scoped>
@@ -107,7 +137,7 @@ const deleteQuestionEvent = () => {
 
 .answer-text {
   flex-grow: 1;
-  padding-left: 10px;
+  margin-right: 1em;
 }
 
 .icons {
@@ -117,7 +147,15 @@ const deleteQuestionEvent = () => {
 }
 
 .add-answer {
-  margin-top: 30px; /* Déplacer le bouton plus bas */
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+    gap: 1em;
+}
+
+.add-button, .delete-button {
+    flex: 1;
+    width: 100%;
 }
 
 input {
@@ -127,10 +165,25 @@ input {
 }
 
 .pi.pi-pencil {
-  color: #10B981;
+  color: #3C3C3C;
+  cursor: pointer;
 }
 
 .pi.pi-trash {
   color: red;
+  cursor: pointer;
+
+}
+
+.pi.pi-check {
+    color: #10B981;
+    cursor: pointer;
+}
+
+.position, .image {
+    display: flex;
+    gap: 1em;
+    align-items: center;
+    margin-top: 0.5em;
 }
 </style>
