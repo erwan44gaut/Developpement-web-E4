@@ -1,14 +1,13 @@
 <template>
-	<div>
-		<h1>Question {{ currentQuestionPosition }} / {{ totalNumberOfQuestions }}</h1>
-		<QuestionDisplay v-if="currentQuestion" :question="currentQuestion" @answer-clicked="answerClickedHandler" />
+	<div class="content">
+		<QuestionDisplay v-if="currentQuestion" :questionNumberText="questionNumberText" :question="currentQuestion" @answer-clicked="answerClickedHandler" />
 		<div v-else>Loading question...</div>
 	</div>
   </template>
   
 <script setup lang="ts">
 import { type Question } from '@/types';
-import { onMounted, ref, defineProps, defineEmits } from 'vue';
+import { onMounted, ref, defineProps, defineEmits, computed } from 'vue';
 import { getQuestionByPosition, getTotalNumberOfQuestions } from '../../services/QuizApiService';
 import QuestionDisplay from './QuestionsDisplay.vue';
   
@@ -20,7 +19,9 @@ const currentQuestion = ref<Question | null>(null);
 const currentQuestionPosition = ref<number>(1);
 const totalNumberOfQuestions = ref<number>(0);
 const answerPositions = ref<number[]>([]);
+const questionNumberText = computed(() => `Question ${currentQuestionPosition.value} / ${totalNumberOfQuestions.value}`);
   
+
 // Émettre un événement lorsque le quiz est terminé
 const emit = defineEmits(['quiz-ended']);
   
@@ -61,3 +62,17 @@ onMounted(async () => {
 });
 </script>
   
+
+<style scoped>
+
+.content 
+{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+</style>

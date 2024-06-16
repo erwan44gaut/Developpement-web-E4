@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Overlay />
+    <Overlay/>
     <UserDisplay v-if="!userSelected" @user-selected="handleUserSelected" />
     <QuestionsManager v-if="userSelected && !quizEnded" @quiz-ended="handleQuizEnded" :playerName="playerName" />
     <ScoreDisplay v-if="quizEnded" :playerName="playerName" :answerPositions="answerPositions" />
