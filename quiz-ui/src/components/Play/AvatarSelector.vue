@@ -1,16 +1,15 @@
 <template>
     <div class="avatar-selector">
-      <VueButton icon="pi pi-chevron-up" @click="previousAvatar" />
+	  <button type="button" :class="['nes-btn is-primary']" @click="nextAvatar">prev</button>
       <AvatarDisplay v-if="currentAvatar" :src="currentAvatar.src" :name="currentAvatar.name" />
       <div v-else>Loading...</div>
-      <VueButton icon="pi pi-chevron-down" @click="nextAvatar" />
+	  <button type="button" :class="['nes-btn is-primary']" @click="nextAvatar">next</button>
     </div>
   </template>
   
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { defineEmits } from 'vue';
-import Button from 'primevue/button';
 import AvatarDisplay from './AvatarDisplay.vue';
   
   // Typage des avatars

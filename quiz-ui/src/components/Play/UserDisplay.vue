@@ -9,12 +9,18 @@
       <img style="height: 10rem; image-rendering: pixelated;" :src="botImage"/>
       <p style="margin-top: 2rem;">> {{ readyText }}</p>
     </div>
+    <AvatarSelector>
+      <template #avatar-selected="avatar">
+        <AvatarDisplay :src="avatar.src" :name="avatar.name" />
+      </template>
+    </AvatarSelector>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, defineEmits, onMounted } from 'vue';
-
+import AvatarSelector from './AvatarSelector.vue';
+import AvatarDisplay from './AvatarDisplay.vue';
 const playerName = ref<string>('');
 const emit = defineEmits(['user-selected']);
 const readyText = ref<string>('');
@@ -22,11 +28,10 @@ const isDisabled = ref<boolean>(false);
 const fadeOut = ref<boolean>(false);
 const botImage = ref<string>('');
 
-
 onMounted(() => {
   setTimeout(() => {
     const randomNumber = Math.floor(Math.random() * 12);
-    botImage.value = `/public/avatars/avatar_${randomNumber}.png`;
+    botImage.value = `/avatars/avatar_${randomNumber}.png`;
   }, 0);
   typeText(`¤¤¤¤¤¤¤¤¤¤Ecrivez votre nom pour débuter.`, () => { });
 });

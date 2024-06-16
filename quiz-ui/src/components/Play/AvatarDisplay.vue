@@ -1,6 +1,6 @@
 <template>
 	<div class="avatar-display">
-		<VueImage :src="props.src" :alt="props.name" width="150" height="150" preview class="pixelated"/>
+		<img :src="props.src" :alt="props.name" width="150" height="150" preview class="pixelated"/>
 	</div>
   </template>
   
