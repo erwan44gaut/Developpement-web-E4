@@ -2,8 +2,8 @@
   <div>
     <div v-if="showOverlay" class="overlay" :class="{ 'slide-up': slideUp }">
       <div class="overlay-content">
-        <div style="font-weight: normal;">Welcome to the ultimate retrogaming quiz</div>
-        <div style="font-weight: normal; font-size: 1.2rem;">by Erwan GAUTIER, Thomas LE MAGNY, Alex FOULON</div>
+        <div style="font-weight: normal;">Bienvenue sur le quiz retrogaming ultime !</div>
+        <div style="font-weight: normal; font-size: 1.2rem;">Erwan GAUTIER, Thomas LE MAGNY, Alex FOULON</div>
         <Button label="Start" @click="triggerSlideUp"></Button>
       </div>
     </div>
