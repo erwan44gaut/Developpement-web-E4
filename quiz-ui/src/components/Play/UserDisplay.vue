@@ -5,7 +5,7 @@
       <input type="text" v-model="playerName" class="nes-input" placeholder="Entrez votre nom" :disabled="isDisabled" @keyup.enter="selectUser"/>
       <button type="button" :class="['nes-btn is-primary', {'is-disabled': isDisabled || playerName === ''}]" @click="selectUser" :disabled="isDisabled || playerName === ''">Go!</button>
     </div>
-    <div style="display: flex; width: 100%;">
+    <div style="display: flex; justify-content: space-between; width: 100%;">
       <p style="margin-top: 2rem;">> {{ readyText }}</p>
         <AvatarSelector>
           <template #avatar-selected="avatar">
