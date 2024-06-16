@@ -1,8 +1,8 @@
 <template>
   <VueScrollPanel class="scroll-panel">
     <div class="content">
-      <GlobalRanking :scores="scores" v-if="scores.length > 0" containerWidth="80vw" containerHeight="600px" />
-      <GlobalChart />
+      <GlobalRanking :scores="scores" v-if="scores.length > 0" containerWidth="80vw" containerHeight="400px" />
+      <GlobalChart containerWidth="30vw" containerHeight="40vh" />
     </div>
   </VueScrollPanel>
 </template>

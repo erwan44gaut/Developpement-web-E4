@@ -2,6 +2,8 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 import PrimeVue from 'primevue/config';
+import ConfirmationService from 'primevue/confirmationservice';
+import ToastService from 'primevue/toastservice';
 import './assets/main.css';
 import './assets/base.css';
 
@@ -14,13 +16,11 @@ import SelectButton from 'primevue/selectbutton';
 import TabView from 'primevue/tabview';
 import Password from 'primevue/password';
 import Image from 'primevue/image';
-import Chart from 'primevue/chart'
-
+import Chart from 'primevue/chart';
 import ScrollPanel from 'primevue/scrollpanel';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
-
-
+import ConfirmDialog from 'primevue/confirmdialog';
 
 import 'primeicons/primeicons.css';
 import 'primevue/resources/primevue.min.css';
@@ -29,6 +29,8 @@ import 'primevue/resources/themes/aura-light-green/theme.css';
 const app = createApp(App);
 
 app.use(PrimeVue);
+app.use(ConfirmationService);
+app.use(ToastService);
 app.use(router);
 
 app.component('VueButton', Button);
@@ -44,5 +46,6 @@ app.component('VueScrollPanel', ScrollPanel);
 app.component('VueDataTable', DataTable);
 app.component('VueColumn', Column);
 app.component('VueChart', Chart);
+app.component('VueConfirmDialog', ConfirmDialog);
 
 app.mount('#app');

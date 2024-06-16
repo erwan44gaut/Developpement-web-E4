@@ -8,9 +8,12 @@
   
 <script setup lang="ts">
 import { type Question } from '@/types';
-import { onMounted, ref, defineEmits } from 'vue';
+import { onMounted, ref, defineProps, defineEmits } from 'vue';
 import { getQuestionByPosition, getTotalNumberOfQuestions } from '../../services/QuizApiService';
 import QuestionDisplay from './QuestionsDisplay.vue';
+  
+// Props
+const props = defineProps<{ playerName: string }>();
   
 // Variables réactives
 const currentQuestion = ref<Question | null>(null);

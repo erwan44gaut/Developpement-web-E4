@@ -3,15 +3,15 @@ import EditorManager from '@/components/Admin/EditorManager.vue';
 </script>
 
 <template>
-  <div class="grid-container">
+  <div class="container">
     <EditorManager />
-</div>
+  </div>
 </template>
 
 <style scoped>
-.grid-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Ajuste pour que chaque colonne prenne une part égale de l'espace */
-  gap: 10px; /* Optionnel : Espace entre les éléments */
+.container {
+  max-height: 100vh;
+  overflow-y: auto;
+  padding: 10px;
 }
 </style>

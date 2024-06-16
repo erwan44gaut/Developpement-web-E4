@@ -1,25 +1,29 @@
 <template>
   <div>
-    <QuestionsManager v-if="!quizEnded" @quiz-ended="handleQuizEnded" />
-    <ScoreManager v-if="quizEnded" :answerPositions="answerPositions" @user-confirmed="handleUserConfirmed" />
+    <UserDisplay v-if="!userSelected" @user-selected="handleUserSelected" />
+    <QuestionsManager v-if="userSelected && !quizEnded" @quiz-ended="handleQuizEnded" :playerName="playerName" />
+    <ScoreDisplay v-if="quizEnded" :playerName="playerName" :answerPositions="answerPositions" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import UserDisplay from '../components/Play/UserDisplay.vue';
 import QuestionsManager from '../components/Play/QuestionsManager.vue';
-import ScoreManager from '../components/Score/ScoreManager.vue';
+import ScoreDisplay from '../components/Play/ScoreDisplay.vue';
 
+const userSelected = ref(false);
 const quizEnded = ref(false);
+const playerName = ref<string>('');
 const answerPositions = ref<number[]>([]);
+
+const handleUserSelected = (name: string) => {
+	playerName.value = name;
+	userSelected.value = true;
+};
 
 const handleQuizEnded = (answers: number[]) => {
 	quizEnded.value = true;
 	answerPositions.value = answers;
-};
-
-const handleUserConfirmed = () => {
-	// Logic to handle after user confirmed, such as redirecting to ScoreView
-	alert('User confirmed!');
 };
 </script>

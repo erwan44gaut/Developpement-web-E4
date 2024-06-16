@@ -178,6 +178,7 @@ def create_question():
 
 @quiz_bp.route('/questions/<int:question_id>', methods=['PUT'])
 def update_question(question_id):
+    print("a")
     auth_header = request.headers.get('Authorization')
     if not auth_header or not utils.jwt_utils.decode_token(auth_header):
         return jsonify({"error": "Unauthorized"}), 401
@@ -235,20 +236,37 @@ def update_question(question_id):
         WHERE question_id = ?
         """, (question_title, question_text, image_url, question_id))
 
-        # Delete existing answers and insert the new ones
-        cursor.execute("""
-            DELETE FROM participation_answers 
-            WHERE answer_id IN (
-                SELECT answer_id FROM answers WHERE question_id = ?
-            )
-        """, (question_id,))
-        cursor.execute("DELETE FROM answers WHERE question_id = ?", (question_id,))
-        for answer in possible_answers:
+        cursor.execute("SELECT answer_id,answer_text,is_correct FROM answers WHERE question_id = ?",(question_id,))
+        answers = cursor.fetchall()
+        answer_without_id = [answer[1:] for answer in answers]
+        new_answers = [(answer['text'],answer['isCorrect']) for answer in possible_answers]
+        
+        #Delete answer
+        if len(answers)>len(new_answers) :
+            for answer in answers :
+                if answer[1:] not in answers :
+                    cursor.execute("DELETE FROM participation_answers WHERE answer_id = ?",(answer[0],))
+                    cursor.execute("DELETE FROM answers where answer_id = ?",(answer[0],))
+                    break
+                    
+                    
+        elif len(answers)<len(new_answers) :
             cursor.execute("""
-            INSERT INTO answers (question_id, answer_text, is_correct)
-            VALUES (?, ?, ?)
-            """, (question_id, answer['text'], answer['isCorrect']))
-
+                INSERT INTO answers (question_id, answer_text, is_correct)
+                VALUES (?, ?, ?)
+                """, (question_id, new_answers[-1][0], new_answers[-1][1]))
+        
+        else :
+            for index,answer in enumerate(answers):
+                if answer[1:]!=new_answers[index]:
+                    cursor.execute("DELETE FROM participation_answers WHERE answer_id = ?",(answer[0],))
+                    cursor.execute("""
+                        UPDATE answers
+                        SET answer_text = ?, is_correct = ?
+                        WHERE answer_id = ?
+                        """, (new_answers[index][0],new_answers[index][1],answer[0],))
+                    break
+                
         # Commit the transaction
         db.commit()
         return "", 204
@@ -348,3 +366,47 @@ def delete_all_participations():
     db.commit()
     return "", 204
 
+@quiz_bp.route('/participation-answers/<int:question_id>', methods=['GET'])
+def get_participation_answers_by_question_id(question_id):
+    db = get_db()
+    cursor = db.cursor()
+    
+    # Exécution de la requête JOIN avec COUNT et GROUP BY
+    cursor.execute("""
+        SELECT
+            a.is_correct,
+            COUNT(pa.participation_answer_id) AS answer_count
+        FROM
+            answers a
+        JOIN
+            participation_answers pa ON a.answer_id = pa.answer_id
+        WHERE
+            a.question_id = ?
+        GROUP BY
+            a.is_correct
+        ORDER BY
+            a.is_correct;
+    """, (question_id,))
+    
+    # Initialisation des compteurs
+    is_correct_count = 0
+    is_not_correct_count = 0
+    
+    # Récupération des résultats
+    results = cursor.fetchall()
+    
+    # Mise à jour des compteurs en fonction des résultats
+    for row in results:
+        if row[0] == 1:
+            is_correct_count = row[1]
+        else:
+            is_not_correct_count = row[1]
+    
+    # Préparation des données pour le JSON
+    participation_answers = {
+        "is_correct": is_correct_count,
+        "is_not_correct": is_not_correct_count
+    }
+    
+    return jsonify(participation_answers), 200
+    

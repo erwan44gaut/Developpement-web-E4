@@ -2,7 +2,7 @@
     <div :style="{ width: containerWidth, height: containerHeight }" class="classement-container">
         <h1>Classement</h1>
         <VueScrollPanel :style="{ width: '100%', height: '100%' }">
-            <VueDataTable :value="sortedScores" scrollable>
+            <VueDataTable :value="props.scores" scrollable>
                 <VueColumn header="Rang">
                     <template #body="slotProps">
                         {{ slotProps.index + 1 }}
@@ -37,9 +37,9 @@ const props = defineProps({
 });
 
 // Trier les scores en ordre décroissant
-const sortedScores = computed(() => {
+/*const sortedScores = computed(() => {
 	return [...props.scores].sort((a, b) => b.score - a.score);
-});
+});*/
 
 // Faire défiler jusqu'au dernier score après le montage du composant
 onMounted(() => {
