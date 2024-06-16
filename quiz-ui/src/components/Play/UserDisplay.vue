@@ -5,9 +5,9 @@
         <VueInputText v-model="playerName" placeholder="Entrez votre nom" :disabled="isDisabled"/>
         <VueButton label="Go !" @click="selectUser" :disabled="isDisabled"/>
       </div>
-      <div>
+      <h3>
         {{ readyText }}
-      </div>
+      </h3>
     </div>
   </template>
   
