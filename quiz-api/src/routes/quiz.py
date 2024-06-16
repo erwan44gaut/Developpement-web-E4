@@ -366,3 +366,47 @@ def delete_all_participations():
     db.commit()
     return "", 204
 
+@quiz_bp.route('/participation-answers/<int:question_id>', methods=['GET'])
+def get_participation_answers_by_question_id(question_id):
+    db = get_db()
+    cursor = db.cursor()
+    
+    # Exécution de la requête JOIN avec COUNT et GROUP BY
+    cursor.execute("""
+        SELECT
+            a.is_correct,
+            COUNT(pa.participation_answer_id) AS answer_count
+        FROM
+            answers a
+        JOIN
+            participation_answers pa ON a.answer_id = pa.answer_id
+        WHERE
+            a.question_id = ?
+        GROUP BY
+            a.is_correct
+        ORDER BY
+            a.is_correct;
+    """, (question_id,))
+    
+    # Initialisation des compteurs
+    is_correct_count = 0
+    is_not_correct_count = 0
+    
+    # Récupération des résultats
+    results = cursor.fetchall()
+    
+    # Mise à jour des compteurs en fonction des résultats
+    for row in results:
+        if row[0] == 1:
+            is_correct_count = row[1]
+        else:
+            is_not_correct_count = row[1]
+    
+    # Préparation des données pour le JSON
+    participation_answers = {
+        "is_correct": is_correct_count,
+        "is_not_correct": is_not_correct_count
+    }
+    
+    return jsonify(participation_answers), 200
+    

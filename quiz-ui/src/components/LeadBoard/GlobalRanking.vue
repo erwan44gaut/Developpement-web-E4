@@ -2,7 +2,7 @@
     <div :style="{ width: containerWidth, height: containerHeight }" class="classement-container">
         <h1>Classement</h1>
         <VueScrollPanel :style="{ width: '100%', height: '100%' }">
-            <VueDataTable :value="sortedScores" scrollable>
+            <VueDataTable :value="props.scores" scrollable>
                 <VueColumn header="Rang">
                     <template #body="slotProps">
                         {{ slotProps.index + 1 }}
