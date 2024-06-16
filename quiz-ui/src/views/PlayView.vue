@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Overlay />
     <UserDisplay v-if="!userSelected" @user-selected="handleUserSelected" />
     <QuestionsManager v-if="userSelected && !quizEnded" @quiz-ended="handleQuizEnded" :playerName="playerName" />
     <ScoreDisplay v-if="quizEnded" :playerName="playerName" :answerPositions="answerPositions" />
@@ -7,6 +8,7 @@
 </template>
 
 <script setup lang="ts">
+import Overlay from '@/components/Home/WelcomeOverlay.vue';
 import { ref } from 'vue';
 import UserDisplay from '../components/Play/UserDisplay.vue';
 import QuestionsManager from '../components/Play/QuestionsManager.vue';

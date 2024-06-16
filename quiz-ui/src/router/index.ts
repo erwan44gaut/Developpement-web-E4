@@ -6,7 +6,7 @@ import HomeView from '../views/HomeView.vue';
 import LoginView from '../views/LoginView.vue';
 
 const routes = [
-	{ path: '/', component: HomeView, name: 'home' },
+    { path: '/', redirect: '/play' },
 	{ path: '/play', component: PlayView, name: 'play' },
 	{ path: '/leadboard', component: LeadboardView, name: 'leadboard' },
 	{ path: '/admin', component: AdminView, name: 'admin' },

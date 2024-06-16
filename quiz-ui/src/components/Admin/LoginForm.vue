@@ -23,13 +23,10 @@ const validatePassword = async () => {
 	}
 };
 
-const handleDialogClose = () => {
-	if (!flag) router.push('/');
-};
 </script>
 
 <template>
-  <VueDialog v-model:visible="visible" modal header="Admin Connection" @hide="handleDialogClose">
+  <VueDialog v-model:visible="visible" header="Admin Connection" :closable="false">
     <div class="message">
       <span>Enter your password.</span>
     </div>
