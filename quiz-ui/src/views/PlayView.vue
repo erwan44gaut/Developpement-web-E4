@@ -1,8 +1,8 @@
 <template>
   <div>
-    <Overlay/>
-    <UserDisplay v-if="!userSelected" @user-selected="handleUserSelected" />
-    <QuestionsManager v-if="userSelected && !quizEnded" @quiz-ended="handleQuizEnded" :playerName="playerName" />
+    <Overlay @overlay-gone="handleOverlayGone"/>
+    <UserDisplay v-if="overlayGone && !userSelected" @user-selected="handleUserSelected" />
+    <QuestionsManager v-if="userSelected" @quiz-ended="handleQuizEnded" :playerName="playerName" />
     <ScoreDisplay v-if="quizEnded" :playerName="playerName" :answerPositions="answerPositions" />
   </div>
 </template>
@@ -18,6 +18,11 @@ const userSelected = ref(false);
 const quizEnded = ref(false);
 const playerName = ref<string>('');
 const answerPositions = ref<number[]>([]);
+const overlayGone = ref(false);
+
+const handleOverlayGone = () => {
+  overlayGone.value = true;
+};
 
 const handleUserSelected = (name: string) => {
 	playerName.value = name;

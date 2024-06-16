@@ -1,32 +1,48 @@
 <template>
-    <div class="content">
-      <h1>Avant de commencer, entrez votre nom.</h1>
-      <div>
-        <VueInputText v-model="playerName" placeholder="Entrez votre nom" :disabled="isDisabled"/>
-        <VueButton label="Go !" @click="selectUser" :disabled="isDisabled"/>
-      </div>
-      <h3>
-        {{ readyText }}
-      </h3>
+  <div :class="['nes-container is-dark with-title', 'content', { 'fade': fadeOut }]">
+    <p class="title">Préparation</p>
+    <div style="display: flex; width: 100%; align-items: center;">
+      <input type="text" v-model="playerName" class="nes-input" placeholder="Entrez votre nom" :disabled="isDisabled" @keyup.enter="selectUser"/>
+      <button type="button" :class="['nes-btn is-primary', {'is-disabled': isDisabled || playerName === ''}]" @click="selectUser" :disabled="isDisabled || playerName === ''">Go!</button>
     </div>
-  </template>
-  
+    <div style="display: flex; width: 100%;">
+      <img style="height: 10rem; image-rendering: pixelated;" :src="botImage"/>
+      <p style="margin-top: 2rem;">> {{ readyText }}</p>
+    </div>
+  </div>
+</template>
+
 <script setup lang="ts">
-import { ref, defineEmits } from 'vue';
-  
+import { ref, defineEmits, onMounted } from 'vue';
+
 const playerName = ref<string>('');
 const emit = defineEmits(['user-selected']);
 const readyText = ref<string>('');
 const isDisabled = ref<boolean>(false);
+const fadeOut = ref<boolean>(false);
+const botImage = ref<string>('');
+
+
+onMounted(() => {
+  setTimeout(() => {
+    const randomNumber = Math.floor(Math.random() * 12);
+    botImage.value = `/public/avatars/avatar_${randomNumber}.png`;
+  }, 0);
+  typeText(`¤¤¤¤¤¤¤¤¤¤Ecrivez votre nom pour débuter.`, () => { });
+});
 
 const selectUser = () => {
-  if (playerName.value.trim() === '') {
-    alert('Veuillez entrer un nom');
+  if (playerName.value.trim() === '')
+  {
     return;
   }
   isDisabled.value = true; // Disable input and button
-  typeText(`OK ${playerName.value}¤¤¤, voyons voir de quoi vous êtes capables.¤¤¤¤¤¤¤¤¤¤`, () => {
-    emit('user-selected', playerName.value);
+  typeText(`OK ${playerName.value},¤¤¤ voyons voir de quoi vous êtes capables.¤¤¤¤¤¤¤¤¤¤`, () => {
+    fadeOut.value = true; // Trigger fade out
+    setTimeout(() => {
+      emit('user-selected', playerName.value);
+      console.log('User selected:', playerName.value);
+    }, 1000); // Wait for the fade out to complete
   });
 };
 
@@ -64,13 +80,17 @@ const typeText = (text: string, callback: () => void) => {
 </script>
 
 <style scoped>
-.content
-{
+.content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1em;
-  margin-top: 5em;
+  margin: auto;
+  margin-top: 2em;
+  width: 80%;
+  transition: opacity 0.5s ease-in;
 }
 
+.fade {
+  opacity: 0;
+}
 </style>

@@ -1,9 +1,11 @@
 <template>
 	<div class="content">
-		<QuestionDisplay v-if="currentQuestion" :questionNumberText="questionNumberText" :question="currentQuestion" @answer-clicked="answerClickedHandler" />
-		<div v-else>Loading question...</div>
+		<transition name="fade" mode="out-in">
+			<QuestionDisplay v-if="currentQuestion" :key="currentQuestion.id" :questionNumberText="questionNumberText" :question="currentQuestion" @answer-clicked="answerClickedHandler" />
+			<div v-else>Loading question...</div>
+		</transition>
 	</div>
-  </template>
+	</template>
   
 <script setup lang="ts">
 import { type Question } from '@/types';
@@ -29,12 +31,16 @@ const emit = defineEmits(['quiz-ended']);
 const loadQuestionByPosition = async (position: number) => {
 	console.log('load new questions');
 	try {
-		currentQuestion.value = await getQuestionByPosition(position);
-		console.log(currentQuestion.value);
+		currentQuestion.value = null; // Trigger the animation
+		setTimeout(async () => {
+			currentQuestion.value = await getQuestionByPosition(position);
+			console.log(currentQuestion.value);
+		}, 0); // Delay to ensure the transition occurs
 	} catch (error) {
 		console.error('Error loading question:', error);
 	}
 };
+
   
 // Gestionnaire de clic de réponse
 const answerClickedHandler = (answerIndex: number) => {
@@ -73,6 +79,22 @@ onMounted(async () => {
   justify-content: center;
   height: 100vh;
   overflow: hidden;
+}
+
+.fade-enter-active {
+  transition: opacity 0.25s;
+}
+
+.fade-enter-from {
+  opacity: 0;
+}
+
+.fade-leave-active {
+  transition: opacity 0.25s;
+}
+
+.fade-leave-to {
+  opacity: 0;
 }
 
 </style>

@@ -6,7 +6,7 @@
                 <div>
                     {{ question.text }}
                 </div>
-                <VueImage v-if="question.image" :src="question.image" :alt="question.text" width="250" height="250" preview />
+                <VueImage v-if="question.image" :src="question.image" width="250" height="250" preview />
                 <div>
                     <div v-for="(answer, index) in question.possibleAnswers" :key="answer.answer_id" class="answers" @click="selectAnswer(index)">
                         <VueRadioButton v-model="selectedAnswer" :value="answer" @change="() => selectAnswer(index)" />

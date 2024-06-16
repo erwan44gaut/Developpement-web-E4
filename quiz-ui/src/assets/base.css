@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'RetroFont';
-  src: url('/PixelifySans.ttf') format('truetype');
+  src: url('/PressStart2P.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -89,6 +89,13 @@ textarea,
     sans-serif;
 }
 
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
 body {
   min-height: 100vh;
   color: var(--color-text);
@@ -101,4 +108,14 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+#app .app{
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
