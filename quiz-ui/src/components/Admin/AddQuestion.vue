@@ -93,6 +93,8 @@ const saveQuestion = async () => {
 
         <VueButton label="Add Answer" @click="addAnswer" class="mb-3" />
       </div>
+      <p class="info">Click on one of the radio buttons, to select</p>
+      <p class="info">the right answer.</p>
 
       <template #footer>
         <div class="footer-buttons">
@@ -130,6 +132,7 @@ i.pi.pi-plus {
 
 .pi.pi-trash {
   color: red;
+  cursor: pointer;
 }
 
 .dialog {
@@ -159,5 +162,11 @@ i.pi.pi-plus {
 
 .cancel-button {
 	margin-right: 0.5em;
+}
+
+.info {
+  color: red;
+  font-size: 0.8em;
+  
 }
 </style>

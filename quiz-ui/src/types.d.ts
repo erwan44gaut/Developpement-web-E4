@@ -34,3 +34,9 @@ export enum Grade {
     Average = 'Average',
     Poor = 'Poor'
 }
+
+// Typage des avatars
+interface Avatar {
+    src: string;
+    name: string;
+}
