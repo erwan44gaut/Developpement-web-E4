@@ -27,3 +27,10 @@ export interface QuizInfo {
     scores: Score[];
     size: number;
 }
+
+export enum Grade {
+    Excellent = 'Excellent',
+    Good = 'Good',
+    Average = 'Average',
+    Poor = 'Poor'
+}
