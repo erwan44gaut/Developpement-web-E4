@@ -1,6 +1,6 @@
 <template>
 	<div class="avatar-display">
-		<img :src="props.src" :alt="props.name" width="150" height="150" preview class="pixelated"/>
+		<img :src="props.src" :alt="props.name" :width="props.width" :height="props.height" preview class="pixelated"/>
 	</div>
   </template>
   
@@ -15,8 +15,17 @@ const props = defineProps({
 	name: {
 		type: String,
 		required: true
+	},
+	width: {
+		type: [String, Number],
+		default: 150
+	},
+	height: {
+		type: [String, Number],
+		default: 150
 	}
 });
+
 </script>
   
   <style scoped>

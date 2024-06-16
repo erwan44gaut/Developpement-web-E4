@@ -7,11 +7,7 @@
     </div>
     <div style="display: flex; justify-content: space-between; width: 100%;">
       <p style="margin-top: 2rem;">> {{ readyText }}</p>
-        <AvatarSelector>
-          <template #avatar-selected="avatar">
-            <AvatarDisplay :src="avatar.src" :name="avatar.name" />
-          </template>
-        </AvatarSelector>
+      <AvatarSelector @avatar-selected="handleAvatarSelected"/>
     </div>
   </div>
 </template>
@@ -19,82 +15,74 @@
 <script setup lang="ts">
 import { ref, defineEmits, onMounted } from 'vue';
 import AvatarSelector from './AvatarSelector.vue';
-import AvatarDisplay from './AvatarDisplay.vue';
+
 const playerName = ref<string>('');
+const avatarName = ref<string>('');
 const emit = defineEmits(['user-selected']);
 const readyText = ref<string>('');
 const isDisabled = ref<boolean>(false);
 const fadeOut = ref<boolean>(false);
-const botImage = ref<string>('');
 
 onMounted(() => {
-  setTimeout(() => {
-    const randomNumber = Math.floor(Math.random() * 12);
-    botImage.value = `/avatars/avatar_${randomNumber}.png`;
-  }, 0);
-  typeText(`¤¤¤¤¤¤¤¤¤¤Ecrivez votre nom pour débuter.¤¤¤¤¤ N'oubliez pas de choisir votre avatar.`, () => { });
+	typeText(`¤¤¤¤¤¤¤¤¤¤Ecrivez votre nom pour débuter.¤¤¤¤¤ N'oubliez pas de choisir votre avatar.`, () => { });
 });
 
+const handleAvatarSelected = (name: string) => {
+	avatarName.value = name;
+};
+
 const selectUser = () => {
-  if (playerName.value.trim() === '')
-  {
-    return;
-  }
-  isDisabled.value = true; // Disable input and button
-  typeText(`OK ${playerName.value},¤¤¤ voyons voir de quoi vous êtes capables.¤¤¤¤¤¤¤¤¤¤`, () => {
-    fadeOut.value = true; // Trigger fade out
-    setTimeout(() => {
-      emit('user-selected', playerName.value);
-      console.log('User selected:', playerName.value);
-    }, 1000); // Wait for the fade out to complete
-  });
+	if (playerName.value.trim() === '') {
+		return;
+	}
+	isDisabled.value = true;
+	typeText(`OK ${playerName.value},¤¤¤ voyons voir de quoi vous êtes capables.¤¤¤¤¤¤¤¤¤¤`, () => {
+		fadeOut.value = true;
+		setTimeout(() => {
+			emit('user-selected', { name: playerName.value, avatar: avatarName.value });
+		}, 1000);
+	});
 };
 
 const typeText = (text: string, callback: () => void) => {
-  readyText.value = '';
-  let index = 0;
+	readyText.value = '';
+	let index = 0;
 
-  const type = () => {
-    if (index < text.length) {
-      if (text[index] === '¤') // Used for temporisation
-      {
-        index++;
-        setTimeout(type, 100);
-      }
-      else if (text[index] === ' ')
-      {
-        readyText.value += text[index];
-        index++;
-        setTimeout(type, 0);
-      }
-      else
-      {
-        readyText.value += text[index];
-        index++;
-        setTimeout(type, 50);
-      }
-    } else {
-      callback();
-    }
-  };
+	const type = () => {
+		if (index < text.length) {
+			if (text[index] === '¤') {
+				index++;
+				setTimeout(type, 100);
+			} else if (text[index] === ' ') {
+				readyText.value += text[index];
+				index++;
+				setTimeout(type, 0);
+			} else {
+				readyText.value += text[index];
+				index++;
+				setTimeout(type, 50);
+			}
+		} else {
+			callback();
+		}
+	};
 
-  type();
+	type();
 };
-
 </script>
 
 <style scoped>
 .content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: auto;
-  margin-top: 2em;
-  width: 80%;
-  transition: opacity 0.5s ease-in;
+display: flex;
+flex-direction: column;
+align-items: center;
+margin: auto;
+margin-top: 2em;
+width: 80%;
+transition: opacity 0.5s ease-in;
 }
 
 .fade {
-  opacity: 0;
+opacity: 0;
 }
 </style>

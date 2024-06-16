@@ -1,6 +1,6 @@
 <template>
     <div class="question-display">
-        <Card v-if="question" class="card">
+        <VueCard v-if="question" class="card">
             <template #title><span style="font-weight: bold;">{{ questionNumberText }}: </span>{{ question.title }}</template>
             <template #content>
                 <div>
@@ -16,10 +16,10 @@
             </template>
             <template #footer>
                 <div class="flex gap-4 mt-1">
-                    <Button label="Submit" class="w-full" @click="Submit()" :disabled="!canSubmit" outlined ></Button>
+                    <VueButton label="Submit" class="w-full" @click="Submit()" :disabled="!canSubmit" outlined ></VueButton>
                 </div>
             </template>
-        </Card>
+        </VueCard>
         <div v-else class="content">
             Loading...
         </div>
@@ -29,8 +29,6 @@
 <script setup lang="ts">
 import { ref, defineProps, defineEmits } from 'vue';
 import { type Question, type Answer } from '@/types';
-import Card from 'primevue/card';
-import Button from 'primevue/button';
 
 const props = defineProps<{ question: Question | null, questionNumberText: string | null }>();
 const emit = defineEmits(['answer-clicked']);
@@ -40,21 +38,21 @@ const canSubmit = ref<boolean>(false);
 
 const selectAnswer = (index: number) =>
 {
-    if (props.question && props.question.possibleAnswers)
-    {
-        selectedAnswerIndex.value = index;
-        selectedAnswer.value = props.question.possibleAnswers[index];
-        canSubmit.value = true;
-    }
+	if (props.question && props.question.possibleAnswers)
+	{
+		selectedAnswerIndex.value = index;
+		selectedAnswer.value = props.question.possibleAnswers[index];
+		canSubmit.value = true;
+	}
 };
 
 const Submit = () =>
 {
-    if (selectedAnswer.value)
-    {
-        emit('answer-clicked', selectedAnswerIndex.value);
-        canSubmit.value = false;
-    }
+	if (selectedAnswer.value)
+	{
+		emit('answer-clicked', selectedAnswerIndex.value);
+		canSubmit.value = false;
+	}
 };
 </script>
 

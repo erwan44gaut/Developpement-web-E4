@@ -3,8 +3,8 @@
 	<div class="overlay-content">
 		<div style="font-weight: normal;">Félicitations, {{ playerName }}!</div>
         <div style="font-weight: normal; font-size: 1.2rem;">Votre score : {{ score }}</div>
-		<Button label="Rejouer" @click="Replay" style="margin-right: 0.5rem;"></Button>
-		<Button label="Classements" @click="Leaderboard"></Button>
+		<VueButton label="Rejouer" @click="Replay" style="margin-right: 0.5rem;"></VueButton>
+		<VueButton label="Classements" @click="Leaderboard"></VueButton>
 	</div>
   </div>
 </template>
@@ -15,29 +15,29 @@ import { saveScore } from '../../services/QuizApiService';
 import { type Participation } from '@/types';
 import { useRouter } from 'vue-router';
 const router = useRouter();
-import Button from 'primevue/button';
 
-const props = defineProps<{ playerName: string; answerPositions: number[] }>();
+const props = defineProps<{ avatarName: string; playerName: string; answerPositions: number[] }>();
 
 const score = ref<number | null>(null);
 
 onMounted(async () => {
-  const participation: Participation = {
-    answers: props.answerPositions,
-    playerName: props.playerName
-  };
+	const participation: Participation = {
+		answers: props.answerPositions,
+		playerName: props.playerName,
+		avatarName: props.avatarName
+	};
+	console.log(participation);
+	try {
+		score.value = await saveScore(participation);
+	} catch (error) {
+		console.error('Failed to save score', error);
+	}
 
-  try {
-    score.value = await saveScore(participation);
-  } catch (error) {
-    console.error('Failed to save score', error);
-  }
-
-  // Trigger the animation
-  const overlayElement = document.querySelector('.overlay');
-  if (overlayElement) {
-    overlayElement.classList.add('slide-up');
-  }
+	// Trigger the animation
+	const overlayElement = document.querySelector('.overlay');
+	if (overlayElement) {
+		overlayElement.classList.add('slide-up');
+	}
 });
 
 const Replay = () =>

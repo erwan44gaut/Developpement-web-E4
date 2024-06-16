@@ -14,7 +14,7 @@ import { getQuestionByPosition, getTotalNumberOfQuestions } from '../../services
 import QuestionDisplay from './QuestionsDisplay.vue';
   
 // Props
-const props = defineProps<{ playerName: string }>();
+const props = defineProps<{ avatarName: string; playerName: string }>();
   
 // Variables réactives
 const currentQuestion = ref<Question | null>(null);

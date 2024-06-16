@@ -16,10 +16,12 @@ export interface Answer {
 export interface Participation {
     answers: number[];
     playerName: string;
+    avatarName: string;
 }
 
 export interface Score {
     playerName: string;
+    avatarName: string;
     score: number;
 }
 

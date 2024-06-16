@@ -21,6 +21,7 @@ import ScrollPanel from 'primevue/scrollpanel';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import ConfirmDialog from 'primevue/confirmdialog';
+import Card from 'primevue/card';
 
 import 'primeicons/primeicons.css';
 import 'primevue/resources/primevue.min.css';
@@ -47,5 +48,6 @@ app.component('VueDataTable', DataTable);
 app.component('VueColumn', Column);
 app.component('VueChart', Chart);
 app.component('VueConfirmDialog', ConfirmDialog);
+app.component('VueCard', Card);
 
 app.mount('#app');

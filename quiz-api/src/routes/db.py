@@ -37,6 +37,7 @@ def rebuild_db():
     CREATE TABLE participations (
         participation_id INTEGER PRIMARY KEY AUTOINCREMENT,
         playerName TEXT NOT NULL,
+        avatarName TEXT,
         score INTEGER NOT NULL,
         timestamp DATETIME NOT NULL
     )
