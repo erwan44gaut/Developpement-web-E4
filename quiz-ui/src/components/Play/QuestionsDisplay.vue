@@ -1,4 +1,5 @@
 <template>
+    <Overlay />
     <div v-if="question">
         <h2>{{ question.text }}</h2>
         <VueImage v-if="question.image" :src="question.image" :alt="question.text" width="250" height="250" preview />
@@ -15,6 +16,7 @@
 <script setup lang="ts">
 import { ref, defineProps, defineEmits } from 'vue';
 import { type Question, type Answer } from '@/types';
+import Overlay from '@/components/Home/WelcomeOverlay.vue';
 
 defineProps<{ question: Question | null }>();
 const emit = defineEmits(['answer-clicked']);
