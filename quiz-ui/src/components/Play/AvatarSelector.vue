@@ -1,6 +1,6 @@
 <template>
     <div class="avatar-selector">
-	  <button type="button" :class="['nes-btn is-primary']" @click="nextAvatar"><</button>
+	  <button type="button" :class="['nes-btn is-primary']" @click="previousAvatar"><</button>
       <AvatarDisplay v-if="currentAvatar" :src="currentAvatar.src" :name="currentAvatar.name" />
       <div v-else>Loading...</div>
 	  <button type="button" :class="['nes-btn is-primary']" @click="nextAvatar">></button>
