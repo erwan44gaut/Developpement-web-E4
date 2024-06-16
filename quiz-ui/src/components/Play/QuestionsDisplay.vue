@@ -1,26 +1,61 @@
 <template>
-    <div v-if="question">
-        <h2>{{ question.text }}</h2>
-        <VueImage v-if="question.image" :src="question.image" :alt="question.text" width="250" height="250" preview />
-        <div v-for="(answer, index) in question.possibleAnswers" :key="answer.answer_id" class="answers">
-        <VueRadioButton v-model="selectedAnswer" :value="answer" @change="() => selectAnswer(index)" />
-        <label>{{ answer.text }}</label>
+    <div class="question-display">
+        <Card v-if="question" class="card">
+            <template #title><span style="font-weight: bold;">{{ questionNumberText }}: </span>{{ question.title }}</template>
+            <template #content>
+                <div>
+                    {{ question.text }}
+                </div>
+                <VueImage v-if="question.image" :src="question.image" :alt="question.text" width="250" height="250" preview />
+                <div>
+                    <div v-for="(answer, index) in question.possibleAnswers" :key="answer.answer_id" class="answers" @click="selectAnswer(index)">
+                        <VueRadioButton v-model="selectedAnswer" :value="answer" @change="() => selectAnswer(index)" />
+                        <label>{{ answer.text }}</label>
+                    </div>
+                </div>
+            </template>
+            <template #footer>
+                <div class="flex gap-4 mt-1">
+                    <Button label="Submit" class="w-full" @click="Submit()" :disabled="!canSubmit" outlined ></Button>
+                </div>
+            </template>
+        </Card>
+        <div v-else class="content">
+            Loading...
         </div>
-    </div>
-    <div v-else>
-        Loading...
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref, defineProps, defineEmits } from 'vue';
 import { type Question, type Answer } from '@/types';
+import Card from 'primevue/card';
+import Button from 'primevue/button';
 
-defineProps<{ question: Question | null }>();
+const props = defineProps<{ question: Question | null, questionNumberText: string | null }>();
 const emit = defineEmits(['answer-clicked']);
+const selectedAnswerIndex = ref<number | null>(null);
 const selectedAnswer = ref<Answer | null>(null);
+const canSubmit = ref<boolean>(false);
 
-const selectAnswer = (index: number) => { emit('answer-clicked', index); };
+const selectAnswer = (index: number) =>
+{
+    if (props.question && props.question.possibleAnswers)
+    {
+        selectedAnswerIndex.value = index;
+        selectedAnswer.value = props.question.possibleAnswers[index];
+        canSubmit.value = true;
+    }
+};
+
+const Submit = () =>
+{
+    if (selectedAnswer.value)
+    {
+        emit('answer-clicked', selectedAnswerIndex.value);
+        canSubmit.value = false;
+    }
+};
 </script>
 
 <style scoped>
@@ -36,5 +71,24 @@ margin-right: 8px;
 
 label {
 margin-left: 8px;
+}
+
+.content
+{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  opacity: 1;
+}
+
+
+.card
+{
+    width: 50rem;
+    max-height: 80vh;
+    overflow-y: auto;
+    transition-duration: 1s;
 }
 </style>
