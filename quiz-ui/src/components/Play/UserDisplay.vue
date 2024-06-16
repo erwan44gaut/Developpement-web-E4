@@ -20,12 +20,14 @@
 import { ref, defineEmits, onMounted } from 'vue';
 import AvatarSelector from './AvatarSelector.vue';
 import AvatarDisplay from './AvatarDisplay.vue';
+
 const playerName = ref<string>('');
 const emit = defineEmits(['user-selected']);
 const readyText = ref<string>('');
 const isDisabled = ref<boolean>(false);
 const fadeOut = ref<boolean>(false);
 const botImage = ref<string>('');
+const timeoutId = ref<number | null>(null); // To store the current timeout ID
 
 onMounted(() => {
   setTimeout(() => {
@@ -36,8 +38,7 @@ onMounted(() => {
 });
 
 const selectUser = () => {
-  if (playerName.value.trim() === '')
-  {
+  if (playerName.value.trim() === '') {
     return;
   }
   isDisabled.value = true; // Disable input and button
@@ -51,27 +52,25 @@ const selectUser = () => {
 };
 
 const typeText = (text: string, callback: () => void) => {
+  if (timeoutId.value !== null) {
+    clearTimeout(timeoutId.value);
+  }
   readyText.value = '';
   let index = 0;
 
   const type = () => {
     if (index < text.length) {
-      if (text[index] === '¤') // Used for temporisation
-      {
+      if (text[index] === '¤') { // Used for temporisation
         index++;
-        setTimeout(type, 100);
-      }
-      else if (text[index] === ' ')
-      {
+        timeoutId.value = setTimeout(type, 100);
+      } else if (text[index] === ' ') {
         readyText.value += text[index];
         index++;
-        setTimeout(type, 0);
-      }
-      else
-      {
+        timeoutId.value = setTimeout(type, 0);
+      } else {
         readyText.value += text[index];
         index++;
-        setTimeout(type, 50);
+        timeoutId.value = setTimeout(type, 50);
       }
     } else {
       callback();
@@ -80,7 +79,6 @@ const typeText = (text: string, callback: () => void) => {
 
   type();
 };
-
 </script>
 
 <style scoped>
