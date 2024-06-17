@@ -29,12 +29,10 @@ const emit = defineEmits(['quiz-ended']);
   
 // Fonction pour charger une question en fonction de sa position
 const loadQuestionByPosition = async (position: number) => {
-	console.log('load new questions');
 	try {
 		currentQuestion.value = null; // Trigger the animation
 		setTimeout(async () => {
 			currentQuestion.value = await getQuestionByPosition(position);
-			console.log(currentQuestion.value);
 		}, 0); // Delay to ensure the transition occurs
 	} catch (error) {
 		console.error('Error loading question:', error);
@@ -45,11 +43,8 @@ const loadQuestionByPosition = async (position: number) => {
 // Gestionnaire de clic de réponse
 const answerClickedHandler = (answerIndex: number) => {
 	answerPositions.value.push(answerIndex + 1); // Ajouter la position de la réponse à la liste
-	console.log('Answer clicked at position:', answerIndex + 1);
-	console.log('Current position : ', currentQuestionPosition.value);
 	const nextPosition = currentQuestionPosition.value + 1;
 	if (nextPosition <= totalNumberOfQuestions.value) {
-		console.log('Load question position : ', nextPosition);
 		loadQuestionByPosition(nextPosition);
 		currentQuestionPosition.value += 1;
 	} else {

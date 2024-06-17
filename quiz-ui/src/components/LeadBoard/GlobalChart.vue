@@ -63,7 +63,6 @@ const chartOptions = ref({
 // Fonction pour charger les données du graphique
 const loadChartData = async () => {
 	const counts = await getCorrectIncorrectCounts();
-	console.log(counts);
 
 	chartData.value.labels = counts.map((item, index) => `Question ${index + 1}`);
 	chartData.value.datasets[0].data = counts.map(item => item.is_not_correct);

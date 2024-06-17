@@ -43,7 +43,6 @@ const selectUser = () => {
 		fadeOut.value = true; // Trigger fade out
 		setTimeout(() => {
 			emit('user-selected', { name: playerName.value, avatar: avatarName.value });
-			console.log('User selected:', playerName.value);
 		}, 1000); // Wait for the fade out to complete
 	});
 };

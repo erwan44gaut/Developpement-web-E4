@@ -3,6 +3,12 @@
 	<div class="overlay-content">
 		<div style="font-weight: normal;">Félicitations, {{ playerName }}!</div>
         <div style="font-weight: normal; font-size: 1.2rem;">Votre score : {{ score }}</div>
+		<div style="font-weight: normal; font-size: 1.2rem;">Votre avez atteint le grade : {{ gradeString }}</div>
+		<GradeDisplay
+                    :grade="gradeString"
+                    :width="250" 
+                    :height="200" 
+        />
 		<VueButton label="Rejouer" @click="Replay" style="margin-right: 0.5rem;"></VueButton>
 		<VueButton label="Classements" @click="Leaderboard"></VueButton>
 	</div>
@@ -10,15 +16,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, onMounted } from 'vue';
-import { saveScore } from '../../services/QuizApiService';
-import { type Participation } from '@/types';
+import { ref, defineProps, onMounted, computed } from 'vue';
+import { SaveScoreWithGrade } from '../../services/QuizApiService';
+import { Grade, type Participation } from '@/types';
 import { useRouter } from 'vue-router';
+import GradeDisplay from './GradeDisplay.vue'
+
 const router = useRouter();
 
 const props = defineProps<{ avatarName: string; playerName: string; answerPositions: number[] }>();
 
 const score = ref<number | null>(null);
+const grade = ref<Grade | null>(null);
+
+const gradeString = computed(() => {
+	return grade.value ? grade.value.toString() : '';
+});
 
 onMounted(async () => {
 	const participation: Participation = {
@@ -26,9 +39,12 @@ onMounted(async () => {
 		playerName: props.playerName,
 		avatarName: props.avatarName
 	};
-	console.log(participation);
 	try {
-		score.value = await saveScore(participation);
+		const result = await SaveScoreWithGrade(participation);
+		if (result){
+			score.value = result.score;
+			grade.value = result.grade;
+		}
 	} catch (error) {
 		console.error('Failed to save score', error);
 	}
