@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
-import { onMounted } from 'vue';
 import EditorManager from '@/components/Admin/EditorManager.vue';
+import { onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
 const router = useRouter();
 

@@ -1,12 +1,13 @@
 <script setup lang="ts">
+import { getQuestionByPosition, getQuizInfo, updateQuestion } from '@/services/QuizApiService';
 import { type Question } from '@/types';
 import { onMounted, ref } from 'vue';
-import { getQuestionByPosition, getQuizInfo, updateQuestion } from '@/services/QuizApiService';
-import EditorCard from './EditorCard.vue';
 import AddQuestion from './AddQuestion.vue';
+import EditorCard from './EditorCard.vue';
 
 const questions = ref<Question[]>([]);
 const totalNumberOfQuestions = ref<number>(0);
+const isLoading = ref(true);
 
 const loadQuestions = async () => {
 	try {
@@ -18,17 +19,13 @@ const loadQuestions = async () => {
 				questions.value.push(question);
 			}
 		}
+		isLoading.value = false;
 	} catch (error) {
 		console.error('Error initializing quiz:', error);
 	}
 };
 
 onMounted(loadQuestions);
-
-const refreshDeleteQuestions = (question: Question) => {
-	questions.value = questions.value.filter(q => q.id !== question.id);
-	totalNumberOfQuestions.value -= 1;
-};
 
 const refreshChangePosition = async (id: number, newPosition: number) => {
 	const oldPositionQuestion = questions.value.find(q => q.id === id);
@@ -43,34 +40,58 @@ const refreshChangePosition = async (id: number, newPosition: number) => {
 			await updateQuestion(oldPositionQuestion);
 			await updateQuestion(targetPositionQuestion);
 
-			questions.value.sort((a, b) => a.position - b.position);
+			totalRefresh();
 		} catch (error) {
 			console.error('Error updating positions:', error);
 		}
 	}
 };
-</script>
 
+const totalRefresh = () => {
+	isLoading.value = true;
+	questions.value = [];
+	loadQuestions();
+	isLoading.value = false;
+};
+</script>
 
 <template>
 	<div>
+		<div v-if="isLoading" class="loader-container">
+			<VueProgressSpinner />
+		</div>
 		<div class="editor-grid">
 			<template v-for="question in questions" :key="question.id">
 				<EditorCard 
 				class="question" 
 				:question="question"
 				:totalNumberOfQuestions="totalNumberOfQuestions.valueOf()"
-				@refresh-delete-question="refreshDeleteQuestions"
+				@refresh-delete-question="totalRefresh"
 				@refresh-change-position="refreshChangePosition"
 				/>
 			</template>
-			<AddQuestion />
+			<AddQuestion 
+				@refresh-new-question="totalRefresh"
+			/>
 		</div>
 	</div>
-  </template>
+</template>
   
 
 <style scoped>
+.loader-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
 .editor-grid {
 	display: grid;
 	gap: 10px;
@@ -80,9 +101,5 @@ const refreshChangePosition = async (id: number, newPosition: number) => {
 .question {
   border: 1px solid rgba(0, 0, 0, 0.8);
   text-align: center;
-}
-
-.question:hover {
-	background-color: rgba(0, 0, 0, 0.02);
 }
 </style>
