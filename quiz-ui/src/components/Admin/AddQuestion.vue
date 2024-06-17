@@ -47,6 +47,31 @@ const removeAnswer = (answer_id: number) => {
 };
 
 const saveQuestion = async () => {
+	if (newQuestion.value.title === '') {
+		alert('Title cannot be empty');
+		return;
+	}
+	if (newQuestion.value.text === '') {
+		alert('Text cannot be empty');
+		return;
+	}
+	if (newQuestion.value.image === '') {
+		alert('Image URL cannot be empty');
+		return;
+	}
+	if (newQuestion.value.possibleAnswers.length < 2) {
+		alert('At least two answers are required');
+		return;
+	}
+	if (!correctAnswerId.value) {
+		alert('Please select the correct answer');
+		return;
+	}
+	if (newQuestion.value.possibleAnswers.filter((answer) => answer.text === '').length > 0) {
+		alert('Answers cannot be empty');
+		return;
+	}
+
 	try {
 		newQuestion.value.possibleAnswers.forEach(answer => {
 			answer.isCorrect = (answer.answer_id === correctAnswerId.value);
@@ -94,7 +119,7 @@ onMounted(quizInfo);
         <VueInputText id="image" v-model="newQuestion.image"/>
 
         <label for="position">Position</label>
-        <VueInputText id="position" v-model="newQuestion.position" disabled="true"/>
+        <VueInputText id="position" v-model="newQuestion.position" disabled/>
 
         <div v-for="(answer, index) in newQuestion.possibleAnswers" :key="answer.answer_id" class="answer-container">
           <label :for="'answer-' + index">Answer {{ index + 1 }}</label>

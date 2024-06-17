@@ -175,12 +175,13 @@ input {
   justify-content: center;
   width: 40px;
   height: 40px;
+  border-radius: 100%;
+  border: 1px solid #3C3C3C;
   color: #3C3C3C;
 }
 
 .pi.pi-pencil:hover {
   background-color: #3C3C3C;
-  border-radius: 100%;
   color: white;
 }
 
@@ -190,12 +191,13 @@ input {
   justify-content: center;
   width: 40px;
   height: 40px;
+  border-radius: 100%;
+  border: 1px solid red;
   color: red;
 }
 
 .pi.pi-trash:hover {
   background-color: red;
-  border-radius: 100%;
   color: white;
 }
 
@@ -207,12 +209,13 @@ input {
     min-height: 40px;
     max-width: 40px;
     max-height: 40px;
+    border-radius: 50%;
+    border: 1px solid #10B981;
     color: #10B981;
 }
 
 .pi.pi-check:hover {
     background-color: #10B981;
-    border-radius: 50%;
     color: white;
 }
 
