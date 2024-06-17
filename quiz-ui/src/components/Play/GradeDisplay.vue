@@ -1,6 +1,6 @@
 <template>
 	<div class="grade-display">
-		<img :src="getGradePath(props.grade)" :alt="props.grade" :height="props.height" preview class="pixelated"/>
+		<img :src="getGradePath(props.grade)" :height="props.height" preview class="pixelated"/>
 	</div>
   </template>
   

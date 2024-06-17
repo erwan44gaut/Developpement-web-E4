@@ -1,15 +1,27 @@
 <template>
   <div class="overlay">
 	<div class="overlay-content">
-		<div style="font-weight: normal;">Félicitations, {{ playerName }}!</div>
-        <div style="font-weight: normal; font-size: 1.2rem;">Votre score : {{ score }}</div>
-		<div style="font-weight: normal; font-size: 1.2rem;">Votre avez atteint le grade : {{ gradeString }}</div>
+		<div style="font-weight: normal; width: 100%;">Félicitations, {{ playerName }}!</div>
+        <div style="font-weight: normal; width: 100%; font-size: 1.2rem;">Votre score : {{ score }}</div>
+		<div style="font-weight: normal; width: 100%; font-size: 1.2rem;">Votre avez atteint le grade : {{ gradeString }}</div>
 		<GradeDisplay
                     :grade="gradeString"
                     :height="200" 
         />
-		<VueButton label="Rejouer" @click="Replay" style="margin-right: 0.5rem;"></VueButton>
-		<VueButton label="Classements" @click="Leaderboard"></VueButton>
+		<br>
+		
+		<div style="display: flex; align-items: center; justify-content: center;">
+			<button type="button" class="nes-btn is-success" @click="Replay" style="margin-right: 0.5rem;">
+			  <svg class="nav-icon" width="40" height="40" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+				<path d="M10 20H8V4h2v2h2v3h2v2h2v2h-2v2h-2v3h-2v2z" fill="currentColor"/> 
+			  </svg> Home
+			</button>
+			<button class="nes-btn is-primary" label="Classements" @click="Leaderboard">
+				<svg class="nav-icon" width="40" height="40" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+					<path d="M5 3H3v18h18V3H5zm14 2v14H5V5h14zM9 11H7v6h2v-6zm2-4h2v10h-2V7zm6 6h-2v4h2v-4z" fill="white"/>
+				</svg> <span style="padding-left: 0.5rem;">Classements</span>
+			</button>
+		</div>
 	</div>
   </div>
 </template>
@@ -69,6 +81,17 @@ const Leaderboard = () =>
 </script>
 
 <style scoped>
+
+.nes-btn
+{
+	display: flex;
+	text-align: center;
+	align-content: center;
+	justify-content: center;
+	align-items: center;
+	font-size: 1.25rem;
+}
+
 .overlay {
   position: fixed;
   top: 100%;
@@ -91,6 +114,8 @@ const Leaderboard = () =>
   position: absolute;
   top: 50%;
   left: 50%;
+  width: 100vw;
+
   transform: translate(-50%, -50%);
   font-size: 2rem;
   color: white;

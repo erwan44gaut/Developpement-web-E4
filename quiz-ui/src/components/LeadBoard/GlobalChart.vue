@@ -1,12 +1,15 @@
 <template>
-<div :style="{ width: props.containerWidth, height: props.containerHeight }" class="chart-container">
-	<VueChart type="bar" :data="chartData" :options="chartOptions"></VueChart>
+<div :style="{ width: props.containerWidth, height: props.containerHeight }" class="chart-container nes-container is-dark with-title">
+	<p class="title">Réponses:</p>
+	<VueChart class="chart" type="bar" :data="chartData" :options="chartOptions"></VueChart>
 </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { getCorrectIncorrectCounts } from '@/services/QuizApiService';
+import {Chart as ChartJS} from 'chart.js'
+ChartJS.defaults.font.family = "RetroFont";
 
 // Props pour la taille du conteneur
 const props = defineProps({
@@ -50,6 +53,9 @@ const chartOptions = ref({
 			text: 'Correct vs Incorrect Answers per Question'
 		}
 	},
+	animation: {
+        duration: 200  // Disable all animations
+    },
 	scales: {
 		x: {
 			stacked: true
@@ -74,9 +80,5 @@ onMounted(loadChartData);
 </script>
 
 <style scoped>
-.chart-container {
-border: 1px solid #ccc;
-padding: 16px;
-box-sizing: border-box;
-}
+
 </style>

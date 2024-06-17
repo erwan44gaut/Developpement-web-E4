@@ -33,7 +33,7 @@ const playRefresh = () => {
 			</nav>
 		</div>
 		<div class="main">
-			<div>
+			<div class="scroll">
 				<RouterView />
 			</div>
 		</div>
@@ -42,24 +42,32 @@ const playRefresh = () => {
 
 <style scoped>
 
+.scroll {
+  height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
 RouterView {
   margin: 0;
   padding: 0;
-  width: 100%;
-  height: 100%;
 }
 
 .header {
 	width: 100%;
 	height: 35px;
 	background-color: var(--background-color);
+	position: fixed;
+	top: 0;
+	z-index: 1;
 }
 
 .main {
   position: relative;
   flex: 1;
-  width: 100%;
-  overflow: hidden;
 }
 
 .main::before {
@@ -69,13 +77,14 @@ RouterView {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('world-map.png');
+  background-image: url('backgrounds/sky.gif');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  opacity: 0.5;
+  opacity: 0.3;
   z-index: -1;
 }
+
 .link {
 	display: flex;
 	justify-content: center;

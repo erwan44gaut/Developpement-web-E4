@@ -94,10 +94,10 @@ body, html {
   padding: 0;
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 
 body {
-  min-height: 100vh;
   color: var(--color-text);
   background-color: black;
   transition:
@@ -110,12 +110,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-#app {
-  min-height: 100vh;
-}
-
 #app .app{
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  max-height: 100%;
 }

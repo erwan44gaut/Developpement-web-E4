@@ -83,8 +83,9 @@ display: flex;
 flex-direction: column;
 align-items: center;
 margin: auto;
-margin-top: 2em;
-width: 80%;
+margin-top: 6.5em;
+width: 60rem;
+max-width: 80%;
 transition: opacity 0.5s ease-in;
 }
 

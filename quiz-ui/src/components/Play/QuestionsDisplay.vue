@@ -1,26 +1,28 @@
 <template>
     <div class="question-display nes-container is-dark with-title">
-        <p v-if="question" class="title">{{ questionNumberText }}: {{ question.title }}</p>
-        <div v-if="question">
+        <p v-if="question" class="title">{{  question.title }}</p>
+        <div class="question-content" v-if="question">
             <div>
                 <div>
                     {{ question.text }}
                 </div>
+                <br>
                 <VueImage v-if="question.image" :src="question.image" :alt="question.text" width="250" height="250" preview />
+                <br>
+                <br>
                 <div>
                     <div v-for="(answer, index) in question.possibleAnswers" :key="answer.answer_id" class="answers" @click="selectAnswer(index)">
-                        <VueRadioButton v-model="selectedAnswer" :value="answer" @change="() => selectAnswer(index)" />
-                        <label>{{ answer.text }}</label>
+                        <p :class="{'answer nes-text is-primary': selectedAnswerIndex == index}" @click="() => selectAnswer(index)">> {{ answer.text }}</p>
                     </div>
                 </div>
             </div>
             <div>
                 <div class="flex gap-4 mt-1">
-                    <button type="button" class="nes-btn is-success" @click="Submit" :disabled="!canSubmit">Submit</button>
+                    <button type="button" :class="['nes-btn is-success', {'is-disabled' : !canSubmit }]" @click="Submit" :disabled="!canSubmit">Submit</button>
                 </div>
             </div>
         </div>
-        <div v-else class="content">
+        <div v-else class="question-content">
             Loading...
         </div>
     </div>
@@ -30,7 +32,7 @@
 import { ref, defineProps, defineEmits } from 'vue';
 import { type Question, type Answer } from '@/types';
 
-const props = defineProps<{ question: Question | null, questionNumberText: string | null }>();
+const props = defineProps<{ question: Question | null, questionNumber: number | null, questionsAmount: number | null }>();
 const emit = defineEmits(['answer-clicked']);
 const selectedAnswerIndex = ref<number | null>(null);
 const selectedAnswer = ref<Answer | null>(null);
@@ -58,35 +60,30 @@ const Submit = () =>
 
 <style scoped>
 .answers {
-display: flex;
-align-items: center;
-margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
 }
 
 .radio {
-margin-right: 8px;
+    margin-right: 8px;
 }
 
 label {
-margin-left: 8px;
+    margin-left: 8px;
 }
 
-.content
+.nes-container
 {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  opacity: 1;
+    font-size: 0.8rem;
+    width: 60rem;
+    transition-duration: opacity 1s;
+    margin-top: 6rem;
+    margin-bottom: 2rem;
 }
 
-
-.card
+.question-content
 {
-    width: 50rem;
-    max-height: 80vh;
-    overflow-y: auto;
-    transition-duration: 1s;
 }
+
 </style>

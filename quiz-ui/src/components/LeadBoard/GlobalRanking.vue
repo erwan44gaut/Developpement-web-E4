@@ -1,7 +1,7 @@
 <template>
-    <div :style="{ width: containerWidth, height: containerHeight }" class="classement-container">
-      <h1>Classement</h1>
-      <VueScrollPanel :style="{ width: '100%', height: '100%' }">
+    <div :style="{ width: containerWidth, height: containerHeight }" class="classement-container nes-container is-dark with-title">
+      <p class="title">Classement:</p>
+      <VueScrollPanel>
         <VueDataTable :value="props.scores" scrollable>
           <VueColumn header="Rang">
             <template #body="slotProps">
@@ -62,19 +62,14 @@ onMounted(() => {
 </script>
   
   <style scoped>
-  .classement-container {
-    border: 1px solid #ccc;
-    padding: 16px;
-    box-sizing: border-box;
-  }
   .p-datatable {
     width: 100%;
+    height: 30rem;
   }
   .avatar-image {
     width: 32px;
     height: 32px;
     object-fit: cover;
-    border-radius: 50%;
   }
   </style>
   

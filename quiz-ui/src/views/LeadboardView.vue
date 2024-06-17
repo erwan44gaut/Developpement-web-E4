@@ -1,10 +1,10 @@
 <template>
-  <VueScrollPanel class="scroll-panel">
     <div class="content">
-      <GlobalRanking :scores="scores" v-if="scores.length > 0" containerWidth="80vw" containerHeight="400px" />
-      <GlobalChart containerWidth="30vw" containerHeight="40vh" />
+      <div class="grid">
+        <GlobalRanking :scores="scores" v-if="scores.length > 0" containerWidth="45vw" containerHeight="100%" />
+        <GlobalChart containerWidth="45vw" containerHeight="100%" />
+      </div>
     </div>
-  </VueScrollPanel>
 </template>
 
 <script setup lang="ts">
@@ -36,11 +36,17 @@ onMounted(() => {
   width: 100%;
   height: 100vh;
 }
-.content {
-  padding: 20px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+
+.content
+{ 
+  margin-top: 35px;
+  padding: 2rem;
 }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  box-sizing: border-box;
+  width: 100%;
+}
+
 </style>

@@ -1,11 +1,11 @@
 <template>
 	<div class="content">
 		<transition name="fade" mode="out-in">
-			<QuestionDisplay v-if="currentQuestion" :key="currentQuestion.id" :questionNumberText="questionNumberText" :question="currentQuestion" @answer-clicked="answerClickedHandler" />
+			<QuestionDisplay v-if="currentQuestion" :key="currentQuestion.id" :questionNumber="currentQuestionPosition" :questionsAmount="totalNumberOfQuestions" :question="currentQuestion" @answer-clicked="answerClickedHandler" />
 			<div v-else>Loading question...</div>
 		</transition>
 	</div>
-	</template>
+</template>
   
 <script setup lang="ts">
 import { type Question } from '@/types';
@@ -21,11 +21,9 @@ const currentQuestion = ref<Question | null>(null);
 const currentQuestionPosition = ref<number>(1);
 const totalNumberOfQuestions = ref<number>(0);
 const answerPositions = ref<number[]>([]);
-const questionNumberText = computed(() => `Question ${currentQuestionPosition.value} / ${totalNumberOfQuestions.value}`);
-  
 
 // Émettre un événement lorsque le quiz est terminé
-const emit = defineEmits(['quiz-ended']);
+const emit = defineEmits(['quiz-ended', 'questionsAmountReceived', 'questionNumberChanged']);
   
 // Fonction pour charger une question en fonction de sa position
 const loadQuestionByPosition = async (position: number) => {
@@ -47,6 +45,7 @@ const answerClickedHandler = (answerIndex: number) => {
 	if (nextPosition <= totalNumberOfQuestions.value) {
 		loadQuestionByPosition(nextPosition);
 		currentQuestionPosition.value += 1;
+		emit('questionNumberChanged', currentQuestionPosition.value);
 	} else {
 		emit('quiz-ended', answerPositions.value);
 	}
@@ -56,6 +55,8 @@ const answerClickedHandler = (answerIndex: number) => {
 onMounted(async () => {
 	try {
 		totalNumberOfQuestions.value = await getTotalNumberOfQuestions();
+		emit('questionsAmountReceived', totalNumberOfQuestions.value);
+		emit('questionNumberChanged', currentQuestionPosition.value);
 		await loadQuestionByPosition(currentQuestionPosition.value);
 	} catch (error) {
 		console.error('Error initializing quiz:', error);
@@ -72,8 +73,7 @@ onMounted(async () => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-  overflow: hidden;
+  max-height: 100%;
 }
 
 .fade-enter-active {

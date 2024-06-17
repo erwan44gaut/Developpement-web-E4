@@ -1,8 +1,11 @@
 <template>
   <div>
     <Overlay @overlay-gone="handleOverlayGone"/>
+    <div class="progress-bar-container">
+			<progress class="nes-progress is-primary" :value="((currentQuestionPosition - 1) / totalNumberOfQuestions) * 100" max="100"></progress>
+		</div>
     <UserDisplay v-if="overlayGone && !userSelected" @user-selected="handleUserSelected" />
-    <QuestionsManager v-if="userSelected" @quiz-ended="handleQuizEnded" :playerName="playerName" :avatarName="avatarName"/>
+    <QuestionsManager v-if="userSelected" @quiz-ended="handleQuizEnded" @questions-amount-received="SetupProgress" @question-number-changed="UpdateProgress" :playerName="playerName" :avatarName="avatarName"/>
     <ScoreDisplay v-if="quizEnded" :playerName="playerName" :avatarName="avatarName" :answerPositions="answerPositions" />
   </div>
 </template>
@@ -21,6 +24,19 @@ const avatarName = ref<string>('');
 const answerPositions = ref<number[]>([]);
 const overlayGone = ref(false);
 
+const currentQuestionPosition = ref(0);
+const totalNumberOfQuestions = ref(1);
+
+const SetupProgress = (amount: number) =>
+{
+  totalNumberOfQuestions.value = amount;
+};
+
+const UpdateProgress = (position: number) =>
+{
+  currentQuestionPosition.value = position;
+};
+
 const handleOverlayGone = () => {
 	overlayGone.value = true;
 };
@@ -36,3 +52,28 @@ const handleQuizEnded = (answers: number[]) => {
 	answerPositions.value = answers;
 };
 </script>
+
+<style scoped>
+
+.progress-bar-container
+{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    top: 35px;
+    position: fixed;
+    z-index: 1;
+    width: 100%;
+    margin: 0;
+    padding: 0 0.5rem;
+    background-color: var(--background-color);
+    padding-bottom: 0.5rem;
+    border-bottom: 4px solid black;
+}
+
+.nes-progress{
+  height: 30px;
+}
+
+</style>
