@@ -77,8 +77,8 @@ const updatePosition = () => {
 <template>
 <div class="card">
     <div class="question">
-      <h3>{{ question?.title }}</h3>
-      <p>{{ question?.text }}</p>
+      <h2>{{ question?.title }}</h2>
+      <h3>{{ question?.text }}</h3>
       <div class="position">
             <p>Position</p>
             <VueInputText type="number" v-model.number="newPosition" min="1" max="props.totalNumberOfQuestions"></VueInputText>
