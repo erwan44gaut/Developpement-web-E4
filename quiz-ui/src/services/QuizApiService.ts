@@ -108,14 +108,18 @@ export const saveScore = async (participation: Participation): Promise<number | 
 
 const calculateGrade = (percentage: number): Grade => {
 	switch (true) {
-	case percentage >= 90:
-		return Grade.Excellent;
-	case percentage >= 75:
-		return Grade.Good;
-	case percentage >= 50:
-		return Grade.Average;
+	case percentage >= 95:
+		return Grade.Legendary_Hero;
+	case percentage >= 80:
+		return Grade.Epic_Warrior;
+	case percentage >= 60:
+		return Grade.Master_Adventurer;
+	case percentage >= 40:
+		return Grade.Brave_Explorer;
+	case percentage >= 20:
+		return Grade.Novice;	
 	default:
-		return Grade.Poor;
+		return Grade.Troller;
 	}
 };
 
@@ -126,7 +130,7 @@ export const SaveScoreWithGrade = async (participation: Participation): Promise<
 
 		// Calculate the percentage score
 		if (score != null){
-			const percentage = (score / (numberOfQuestions * 10)) * 100; // Assuming each question is scored out of 10
+			const percentage = (score / (numberOfQuestions)) * 100; // Assuming each question is scored out of 10
 
 			// Determine the grade based on the percentage score
 			const grade = calculateGrade(percentage);

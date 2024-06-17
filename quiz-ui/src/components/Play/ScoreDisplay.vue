@@ -6,7 +6,6 @@
 		<div style="font-weight: normal; font-size: 1.2rem;">Votre avez atteint le grade : {{ gradeString }}</div>
 		<GradeDisplay
                     :grade="gradeString"
-                    :width="250" 
                     :height="200" 
         />
 		<VueButton label="Rejouer" @click="Replay" style="margin-right: 0.5rem;"></VueButton>
@@ -20,7 +19,7 @@ import { ref, defineProps, onMounted, computed } from 'vue';
 import { SaveScoreWithGrade } from '../../services/QuizApiService';
 import { Grade, type Participation } from '@/types';
 import { useRouter } from 'vue-router';
-import GradeDisplay from './GradeDisplay.vue'
+import GradeDisplay from './GradeDisplay.vue';
 
 const router = useRouter();
 

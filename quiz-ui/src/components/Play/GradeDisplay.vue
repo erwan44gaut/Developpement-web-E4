@@ -1,6 +1,6 @@
 <template>
 	<div class="grade-display">
-		<img :src="getGradePath(props.grade)" :alt="props.grade" :width="props.width" :height="props.height" preview class="pixelated"/>
+		<img :src="getGradePath(props.grade)" :alt="props.grade" :height="props.height" preview class="pixelated"/>
 	</div>
   </template>
   
@@ -11,10 +11,6 @@ const props = defineProps({
 	grade: {
 		type: String,
 		required: true
-	},
-	width: {
-		type: [String, Number],
-		default: 150
 	},
 	height: {
 		type: [String, Number],
@@ -32,6 +28,12 @@ const getGradePath = (grade: string | null) => {
   <style scoped>
   .grade-display {
 	text-align: center;
+  }
+
+  .responsive-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
   
   .pixelated {

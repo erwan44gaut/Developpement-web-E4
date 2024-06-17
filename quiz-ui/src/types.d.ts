@@ -31,10 +31,12 @@ export interface QuizInfo {
 }
 
 export enum Grade {
-    Excellent = 'Excellent',
-    Good = 'Good',
-    Average = 'Average',
-    Poor = 'Poor'
+    Legendary_Hero = 'Legendary Hero',
+    Epic_Warrior = 'Epic Warrior',
+    Master_Adventurer = 'Master Adventurer',
+    Brave_Explorer = 'Brave Explorer',
+    Novice = 'Novice',
+    Troller = 'Troller'
 }
 
 // Typage des avatars
