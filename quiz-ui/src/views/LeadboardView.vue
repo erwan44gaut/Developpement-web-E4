@@ -42,11 +42,24 @@ onMounted(() => {
   margin-top: 35px;
   padding: 2rem;
 }
+
 .grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   box-sizing: border-box;
   width: 100%;
+
+  opacity: 0; /* Start with opacity 0 */
+  animation: fadeIn 0.5s ease 0.2s forwards; /* Animation definition */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 </style>
