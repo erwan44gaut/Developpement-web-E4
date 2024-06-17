@@ -49,7 +49,7 @@ const props = defineProps({
   
 // Fonction pour obtenir le chemin de l'avatar
 const getAvatarPath = (avatarName: string | null) => {
-	return avatarName ? `../../../public/avatars/${avatarName}.png` : '';
+	return avatarName ? `../../../public/avatars/${avatarName}.png` : '../../../public/avatars/avatar_0.png';
 };
   
 // Faire défiler jusqu'au dernier score après le montage du composant
