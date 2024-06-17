@@ -1,8 +1,8 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <script setup lang="ts">
-import { updateQuestion, deleteQuestion } from '@/services/QuizApiService';
+import { deleteQuestion, updateQuestion } from '@/services/QuizApiService';
 import { type Answer, type Question } from '@/types';
-import { defineProps, ref, defineEmits } from 'vue';
+import { defineEmits, defineProps, ref } from 'vue';
 
 const props = defineProps<{ 
     question: Question | null,
@@ -109,7 +109,7 @@ const updatePosition = () => {
     </div>
     <div class="add-answer">
 		<VueButton @click="addAnswer" class="add-button">Add answer</VueButton>
-		<VueButton @click="deleteQuestionEvent()" severity="danger" outlined class="delete-button">Delete question</VueButton>
+		<VueButton @click="deleteQuestionEvent()" severity="danger" class="delete-button">Delete question</VueButton>
     </div>
   </div>
 </div>
@@ -121,6 +121,11 @@ const updatePosition = () => {
   text-align: center;
   padding: 10px;
   border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+.card:hover {
+  background-color: rgba(255, 255, 255, 0.9);
 }
 
 .question {
@@ -142,7 +147,7 @@ const updatePosition = () => {
 
 .icons {
   display: flex;
-  gap: 10px;
+  gap: 2em;
   margin-left: auto;
 }
 
@@ -165,25 +170,56 @@ input {
 }
 
 .pi.pi-pencil {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
   color: #3C3C3C;
-  cursor: pointer;
+}
+
+.pi.pi-pencil:hover {
+  background-color: #3C3C3C;
+  border-radius: 100%;
+  color: white;
 }
 
 .pi.pi-trash {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
   color: red;
-  cursor: pointer;
+}
 
+.pi.pi-trash:hover {
+  background-color: red;
+  border-radius: 100%;
+  color: white;
 }
 
 .pi.pi-check {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    min-height: 40px;
+    max-width: 40px;
+    max-height: 40px;
     color: #10B981;
-    cursor: pointer;
+}
+
+.pi.pi-check:hover {
+    background-color: #10B981;
+    border-radius: 50%;
+    color: white;
 }
 
 .position, .image {
     display: flex;
     gap: 1em;
-    align-items: center;
+    align-items: baseline;
     margin-top: 0.5em;
 }
 </style>

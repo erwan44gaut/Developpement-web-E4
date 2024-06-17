@@ -22,6 +22,7 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import ConfirmDialog from 'primevue/confirmdialog';
 import Card from 'primevue/card';
+import ProgressSpinner from 'primevue/progressspinner';
 
 import 'primeicons/primeicons.css';
 import 'primevue/resources/primevue.min.css';
@@ -49,5 +50,6 @@ app.component('VueColumn', Column);
 app.component('VueChart', Chart);
 app.component('VueConfirmDialog', ConfirmDialog);
 app.component('VueCard', Card);
+app.component('VueProgressSpinner', ProgressSpinner);
 
 app.mount('#app');

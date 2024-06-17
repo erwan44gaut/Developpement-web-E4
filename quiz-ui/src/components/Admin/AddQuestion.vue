@@ -1,9 +1,19 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { createQuestion } from '@/services/QuizApiService';
+import { createQuestion, getQuizInfo } from '@/services/QuizApiService';
 import { type Question } from '@/types';
+import { defineEmits, onMounted, ref } from 'vue';
 
 const dialogVisible = ref(false);
+const emits = defineEmits(['refresh-new-question']);
+
+const quizInfo = async () => {
+	try {
+		const quizInfo = await getQuizInfo();
+		newQuestion.value.position = quizInfo.size + 1;
+	} catch (error) {
+		console.error('Error creation question:', error);
+	}
+};
 
 const newQuestion = ref<Question>({
 	id: Date.now(),
@@ -42,6 +52,7 @@ const saveQuestion = async () => {
 			answer.isCorrect = (answer.answer_id === correctAnswerId.value);
 		});
 		await createQuestion(newQuestion.value);
+		emits('refresh-new-question');
 		dialogVisible.value = false;
 
 		newQuestion.value = {
@@ -60,11 +71,14 @@ const saveQuestion = async () => {
 		console.error('Error adding question:', error);
 	}
 };
+
+onMounted(quizInfo);
 </script>
 
 <template>
   <div>
     <div class="add" @click="dialogVisible = true">
+      <span class="add-text">Add new question</span>
       <i class="pi pi-plus"></i>
     </div>
 
@@ -79,22 +93,21 @@ const saveQuestion = async () => {
         <label for="image">Image URL</label>
         <VueInputText id="image" v-model="newQuestion.image"/>
 
-		<label for="position">Position</label>
-		<VueInputText type="number" id="position" v-model="newQuestion.position"/>
+        <label for="position">Position</label>
+        <VueInputText id="position" v-model="newQuestion.position" disabled="true"/>
 
         <div v-for="(answer, index) in newQuestion.possibleAnswers" :key="answer.answer_id" class="answer-container">
           <label :for="'answer-' + index">Answer {{ index + 1 }}</label>
           <div class="answer-input">
-            <VueInputText :id="'answer-' + index" v-model="answer.text" class="w-full mr-2"/>
-            <VueRadioButton :value="answer.answer_id" v-model="correctAnswerId" class="mr-2" />
+            <VueInputText :id="'answer-' + index" v-model="answer.text" class="answer-text" />
+            <VueRadioButton :value="answer.answer_id" v-model="correctAnswerId" />
             <i class="pi pi-trash" @click="removeAnswer(answer.answer_id)"></i>
           </div>
         </div>
 
         <VueButton label="Add Answer" @click="addAnswer" class="mb-3" />
       </div>
-      <p class="info">Click on one of the radio buttons, to select</p>
-      <p class="info">the right answer.</p>
+      <p class="info">Click on one of the radio buttons, to select the right answer.</p>
 
       <template #footer>
         <div class="footer-buttons">
@@ -112,18 +125,17 @@ const saveQuestion = async () => {
   align-items: center;
   justify-content: center;
   text-align: center;
-  background-color: #10B981;
+  background-color: rgba(16, 185, 129, 0.7);
   color: white;
   border-radius: 10px;
   width: 100%;
-  height: 50px;
+  height: 100%;
   cursor: pointer;
 }
 
 .add:hover {
-  background-color: white;
-  color: #10B981;
-  border: 1px solid #10B981;
+  background-color: rgba(16, 185, 129, 1);
+  border: 1px solid white;
 }
 
 i.pi.pi-plus {
@@ -131,8 +143,27 @@ i.pi.pi-plus {
 }
 
 .pi.pi-trash {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
   color: red;
-  cursor: pointer;
+}
+
+.pi.pi-trash:hover {
+  background-color: red;
+  border-radius: 100%;
+  color: white;
+}
+
+.answer-text {
+  flex-grow: 1;
+  margin-right: 1em;
+}
+
+.add-text {
+  margin-right: 1em;
 }
 
 .dialog {
@@ -141,7 +172,7 @@ i.pi.pi-plus {
 }
 
 .answer-container {
-  margin-bottom: 10px;
+  margin-bottom: 1em;
 }
 
 .answer-input {
