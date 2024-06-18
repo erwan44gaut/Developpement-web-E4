@@ -2,6 +2,7 @@
 import { createQuestion, getQuizInfo } from '@/services/QuizApiService';
 import { type Question } from '@/types';
 import { defineEmits, onMounted, ref } from 'vue';
+import Dialog from 'primevue/dialog';
 
 const dialogVisible = ref(false);
 const emits = defineEmits(['refresh-new-question']);
@@ -107,40 +108,38 @@ onMounted(quizInfo);
       <i class="pi pi-plus"></i>
     </div>
 
-    <VueDialog header="Add Question" v-model:visible="dialogVisible" :modal="true" :closable="false">
-      <div class="dialog">
-        <label for="title">Title</label>
-        <VueInputText id="title" v-model="newQuestion.title"/>
+	<Dialog :visible="dialogVisible" modal class="nes-container is-dark" headerless>
+		<template #container="{ closeCallback }">
+			<div class="dialog-content">
+				<label for="title">Title</label>
+				<VueInputText class="nes-input is-dark" id="title" v-model="newQuestion.title"/>
 
-        <label for="text">Text</label>
-        <VueInputText id="text" v-model="newQuestion.text"/>
+				<label for="text">Text</label>
+				<VueInputText class="nes-input is-dark" id="text" v-model="newQuestion.text"/>
 
-        <label for="image">Image URL</label>
-        <VueInputText id="image" v-model="newQuestion.image"/>
+				<label for="image">Image URL</label>
+				<VueInputText class="nes-input is-dark" id="image" v-model="newQuestion.image"/>
 
-        <label for="position">Position</label>
-        <VueInputText id="position" v-model="newQuestion.position" disabled/>
+				<label for="position">Position</label>
+				<VueInputText class="nes-input is-dark" id="position" v-model="newQuestion.position" disabled/>
 
-        <div v-for="(answer, index) in newQuestion.possibleAnswers" :key="answer.answer_id" class="answer-container">
-          <label :for="'answer-' + index">Answer {{ index + 1 }}</label>
-          <div class="answer-input">
-            <VueInputText :id="'answer-' + index" v-model="answer.text" class="answer-text" />
-            <VueRadioButton :value="answer.answer_id" v-model="correctAnswerId" />
-            <i class="pi pi-trash" @click="removeAnswer(answer.answer_id)"></i>
-          </div>
-        </div>
-
-        <VueButton label="Add Answer" @click="addAnswer" class="mb-3" />
-      </div>
-      <p class="info">Click on one of the radio buttons, to select the right answer.</p>
-
-      <template #footer>
-        <div class="footer-buttons">
-          <VueButton label="Cancel" icon="pi pi-times" class="cancel-button" severity="danger" @click="dialogVisible = false" />
-          <VueButton label="Save" icon="pi pi-check" class="save-button" @click="saveQuestion" />
-        </div>
-      </template>
-    </VueDialog>
+        		<VueButton label="Add Answer" @click="addAnswer" class="nes-btn is-success" />
+				<p class="info">Click on one of the radio buttons, to select the right answer.</p>
+				<div v-for="(answer, index) in newQuestion.possibleAnswers" :key="answer.answer_id">
+					<label :for="'answer-' + index">Answer {{ index + 1 }}</label>
+					<div class="answer-input">
+						<VueInputText :id="'answer-' + index" v-model="answer.text" class="nes-input is-dark answer-text"/>
+						<VueRadioButton :value="answer.answer_id" v-model="correctAnswerId" />
+						<i class="pi pi-trash" @click="removeAnswer(answer.answer_id)"></i>
+					</div>
+				</div>
+				<div class="footer-buttons">
+					<VueButton label="Cancel" icon="pi pi-times" class="nes-btn is-error" severity="danger" @click="dialogVisible = false" />
+					<VueButton label="Save" icon="pi pi-check" class="nes-btn is-success" @click="saveQuestion" />
+				</div>
+			</div>
+		</template>
+	</Dialog>
   </div>
 </template>
 
@@ -150,67 +149,16 @@ onMounted(quizInfo);
   height: 100%;
 }
 
-
-i.pi.pi-plus {
-  font-size: 24px;
+.answer-input
+{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
 }
 
-.pi.pi-trash {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  color: red;
-}
-
-.pi.pi-trash:hover {
-  background-color: red;
-  border-radius: 100%;
-  color: white;
-}
-
-.answer-text {
-  flex-grow: 1;
-  margin-right: 1em;
-}
-
-.add-text {
-  margin-right: 1em;
-}
-
-.dialog {
-  display: flex;
-  flex-direction: column;
-}
-
-.answer-container {
-  margin-bottom: 1em;
-}
-
-.answer-input {
-  display: flex;
-  align-items: center;
-  gap: 1em;
-}
-
-.footer-buttons {
-  display: flex;
-  width: 100%;
-}
-
-.cancel-button, .save-button {
-  flex: 1;
-  width: 100%;
-}
-
-.cancel-button {
-	margin-right: 0.5em;
-}
-
-.info {
-  color: red;
-  font-size: 0.8em;
-  
+.answer-text
+{
+	widows: 70%;
 }
 </style>
