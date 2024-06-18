@@ -70,7 +70,7 @@ const closeDialog = () => {
 		<div v-if="isLoading" class="loader-container">
 			<VueProgressSpinner />
 		</div>
-		<VueDialog v-model:visible="selectedQuestion" modal>
+		<div v-if="selectedQuestion != null" modal>
 			<div class="dialog-content">
 				<EditorCard
 					class="question"
@@ -78,12 +78,13 @@ const closeDialog = () => {
 					:totalNumberOfQuestions="totalNumberOfQuestions.valueOf()"
 					@refresh-delete-question="totalRefresh"
 					@refresh-change-position="refreshChangePosition"
+					@close="closeDialog"
 				/>
 			</div>
 			<template>
 				<VueButton label="Close" @click="closeDialog" />
 			</template>
-        </VueDialog>
+        </div>
 		<div class="editor-grid">
 			<template v-for="question in questions" :key="question.id">
 				<div class="question nes-btn" @click="selectQuestion(question)">
