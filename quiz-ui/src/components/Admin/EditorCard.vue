@@ -11,8 +11,9 @@ const props = defineProps<{
 }>();
 const editingAnswerId = ref<number | null>(null);
 const newPosition = ref<number | null>(props.question?.position ?? 0);
-const emits = defineEmits(['refresh-delete-question', 'refresh-change-position']);
+const emits = defineEmits(['refresh-delete-question', 'refresh-change-position', 'close']);
 const imageAsb64 = ref<string | null>(props.question?.image ?? '');
+const uploaded = ref<boolean>(props.question?.image != null && props.question?.image !== '');
 
 const startEditing = (answer_id: number) => {
 	editingAnswerId.value = answer_id;
@@ -38,6 +39,11 @@ const saveAnswer = (answer_id: number, newText: string) => {
 };
 
 const addAnswer = () => {
+  if (editingAnswerId.value !== null)
+  {
+		alert('Finish editing first answer before adding a new one.');
+    return;
+  }
 	if (props.question) {
 		const newAnswer: Answer = {
 			answer_id: Date.now(),
@@ -58,10 +64,20 @@ const deleteAnswer = (answer_id: number) => {
 	}
 };
 
+const closeEvent = () => {
+  if (editingAnswerId.value != null)
+  {
+		alert('FInish editing answer before closing.');
+		return;
+	}
+  emits('close');
+};
+
 const deleteQuestionEvent = () => {
 	if (props.question) {
 		deleteQuestion(props.question);
-		emits('refresh-delete-question', props.question);
+    emits('refresh-delete-question', props.question);
+    closeEvent();
 	}
 };
 
@@ -86,53 +102,99 @@ const setCorrectAnswer = (answer_id: number) => {
 
 const imageFileChangedHandler = (newImage: string) => {
 	if (props.question) {
-		props.question.image = newImage;
+    uploaded.value = newImage !== '';
+    props.question.image = newImage;
+    imageAsb64.value = newImage;
 		updateQuestion(props.question);
 	}
 };
 </script>
 
 <template>
-<div class="card">
-    <div class="question">
+
+<!-- <div modal headerless class="dialog">
+  <div class="nes-container is-dark">
+    <label for="title">Titre</label>
+    <VueInputText class="nes-input is-dark" id="title" v-model="newQuestion.title"/>
+
+    <label for="text">Texte</label>
+    <VueInputText class="nes-input is-dark" id="text" v-model="newQuestion.text"/>
+
+    <label for="image">Image</label><br>
+    <div style="display: flex; justify-content: space-between;">
+      <div>
+        <UploadImage @file-change="imageFileChangedHandler" :fileDataUrl="imageAsb64"></UploadImage>
+      </div>
+      <VueImage v-if="uploaded" :src="newQuestion.image" alt="question image" width="100"></VueImage>
+    </div>
+    <br> <br>
+    
+    <label for="position">Position</label>
+    <VueInputText class="nes-input is-dark" id="position" v-model="newQuestion.position" disabled/>
+    
+    <br><br><br>
+    <h1 class="">Réponses</h1>
+    <p class="info nes-text is-primary">Selectionnez la bonne réponse en utilisant les boutons bleus.</p>
+    <VueButton label="+ Ajouter une réponse" @click="addAnswer" class="nes-btn is-primary" style="width: 100%; text-align: left;"/>
+    <br><br>
+    <div v-for="(answer, index) in newQuestion.possibleAnswers" :key="answer.answer_id">
+      <label :for="'answer-' + index">Réponse {{ index + 1 }}</label>
+      <div class="answer-input">
+        <VueInputText :id="'answer-' + index" v-model="answer.text" class="nes-input is-dark answer-text"/>
+        <button style="margin-left: 1rem;" :disabled="answer.answer_id == correctAnswerId" :class="['nes-btn is-primary', {'is-disabled' : answer.answer_id == correctAnswerId}]" @click="setRightAnswer(answer.answer_id)">Bonne réponse</button>
+        <button style="margin-left: 0.5rem;" class="nes-btn is-error" @click="removeAnswer(answer.answer_id)">Supprimer</button>
+      </div>
+    </div>
+    <br>
+    <div class="footer-buttons">
+      <VueButton label="Annuler" class="nes-btn is-error" severity="danger" @click="dialogVisible = false" />
+      <VueButton label="Créer" class="nes-btn is-success" @click="saveQuestion" />
+    </div>
+  </div>
+</div> -->
+
+<div modal headerless class="dialog">
+    <div class="nes-container is-dark">
       <h2>{{ question?.title }}</h2>
       <h3>{{ question?.text }}</h3>
       <div class="position">
-            <p>Position</p>
-            <VueInputText type="number" v-model.number="newPosition" :min="1" :max="props.totalNumberOfQuestions" class="nes-input"></VueInputText>
-            <p>/{{ props.totalNumberOfQuestions }}</p>
-            <i class="pi pi-check" @click="updatePosition()"></i>
+            <p>Position:</p>
+            <input class="nes-input" style="width: 5rem;" type="number" v-model.number="newPosition" :min="1" :max="props.totalNumberOfQuestions"/>
+            <p>/ {{ props.totalNumberOfQuestions }}</p>
+            <button class="nes-btn is-success" @click="updatePosition()">Save</button>
       </div>
       <div class="image">
-          <p>Image</p>
+          <p>Image:</p>
           <UploadImage @file-change="imageFileChangedHandler" :fileDataUrl="imageAsb64"></UploadImage>
-          <VueImage :src="question?.image" alt="question image" width="100" height="100"></VueImage>
+          <VueImage v-if="uploaded" :src="question?.image" alt="question image" width="100" height="100"></VueImage>
       </div>
-    <div class="answers">
-      <div class="answer" v-for="answer in question?.possibleAnswers" :key="answer.answer_id">
-        <div class="answer-text">
-          <div v-if="editingAnswerId === answer.answer_id" class="foo">
-            <VueInputText type="text" v-model="answer.text" class="nes-input"/>
-            <i class="pi pi-check" @click="saveAnswer(answer.answer_id, answer.text)"></i>
+      <br><br>
+      <div class="answers">
+        <p>Réponses:</p>
+        <VueButton @click="addAnswer" class="add-button nes-btn is-primary">Ajouter une réponse</VueButton>
+        <div class="answer" v-for="answer in question?.possibleAnswers" :key="answer.answer_id">
+          <div class="answer-text">
+            <div v-if="editingAnswerId === answer.answer_id" style="display: flex;">
+              <input type="text" v-model="answer.text" class="nes-input"/>
+              <button class="nes-btn is-success" @click="saveAnswer(answer.answer_id, answer.text)">Save</button>
+            </div>
+            <template v-else>
+              - {{ answer.text }}
+            </template>
           </div>
-          <template v-else>
-            {{ answer.text }}
-            <i v-if="answer.isCorrect" class="pi pi-check-circle" id="right-answer-indicator"></i>
-          </template>
-        </div>
-        <div class="icons">
-          <i id="select-right-answer" class="pi pi-check-circle" :value="answer.answer_id" @click="setCorrectAnswer(answer.answer_id)"></i>
-          <i class="pi pi-pencil" @click="startEditing(answer.answer_id)"></i>
-          <i class="pi pi-trash" @click="deleteAnswer(answer.answer_id)"></i>
+          <div class="icons">
+            <button class="nes-btn is-primary" @click="startEditing(answer.answer_id)">Editer</button>
+            <button :disabled="answer.isCorrect" :class="['nes-btn is-primary', {'is-disabled' : answer.isCorrect}]" id="select-right-answer" :value="answer.answer_id" @click="setCorrectAnswer(answer.answer_id)">Bonne réponse</button>
+            <button class="nes-btn is-error" @click="deleteAnswer(answer.answer_id)">Supprimer</button>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="add-answer">
-        <VueButton @click="addAnswer" class="add-button nes-btn is-primary">Add answer</VueButton>
-        <VueButton @click="deleteQuestionEvent()" severity="danger" class="delete-button nes-btn is-error">Delete question</VueButton>
+      <div class="add-answer">
+          <button @click="deleteQuestionEvent()" severity="danger" class="delete-button nes-btn is-error">Supprimer la question</button>
+          <button @click="closeEvent()" class="delete-button nes-btn">Fermer</button>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <style scoped>
@@ -171,13 +233,12 @@ const imageFileChangedHandler = (newImage: string) => {
 
 .icons {
   display: flex;
-  gap: 2em;
   margin-left: auto;
 }
 
 .add-answer {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     margin-top: 30px;
     gap: 1em;
 }
@@ -243,24 +304,6 @@ input {
     color: white;
 }
 
-#select-right-answer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 40px;
-    min-height: 40px;
-    max-width: 40px;
-    max-height: 40px;
-    border-radius: 50%;
-    border: 1px solid #10B981;
-    color: #10B981;
-}
-
-#select-right-answer:hover {
-    background-color: #10B981;
-    color: white;
-}
-
 .position, .image {
     display: flex;
     gap: 1em;
@@ -270,5 +313,46 @@ input {
 
 #right-answer-indicator {
   color: #10B981;
+}
+
+/* ALEX */
+
+.dialog
+{
+	padding: 0;
+	margin: 0;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	overflow: auto;
+  z-index: 9999;
+}
+
+.nes-container {
+	margin: 10%;
+}
+
+.answer-input
+{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.answer-text
+{
+	widows: 70%;
+}
+
+.nes-btn {
+	white-space: nowrap;
+}
+
+#text, #title, #position, #image {
+	margin-bottom: 2em;
 }
 </style>

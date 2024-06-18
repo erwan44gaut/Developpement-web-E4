@@ -120,36 +120,41 @@ onMounted(quizInfo);
 
 	<div v-if="dialogVisible" modal headerless class="dialog">
 		<div class="nes-container is-dark">
-			<label for="title">Title</label>
+			<label for="title">Titre</label>
 			<VueInputText class="nes-input is-dark" id="title" v-model="newQuestion.title"/>
 
-			<label for="text">Text</label>
+			<label for="text">Texte</label>
 			<VueInputText class="nes-input is-dark" id="text" v-model="newQuestion.text"/>
 
-			<label for="image">Image</label>
-			<UploadImage @file-change="imageFileChangedHandler" :fileDataUrl="imageAsb64"></UploadImage>
-			<VueImage v-if="uploaded" :src="newQuestion.image" alt="question image" width="100" height="100"></VueImage>
-
+			<label for="image">Image</label><br>
+			<div style="display: flex; justify-content: space-between;">
+				<div>
+					<UploadImage @file-change="imageFileChangedHandler" :fileDataUrl="imageAsb64"></UploadImage>
+				</div>
+				<VueImage v-if="uploaded" :src="newQuestion.image" alt="question image" width="100"></VueImage>
+			</div>
+			<br> <br>
+			
 			<label for="position">Position</label>
 			<VueInputText class="nes-input is-dark" id="position" v-model="newQuestion.position" disabled/>
 			
 			<br><br><br>
-			<h1 class="">Answers</h1>
-			<p class="info nes-text is-primary">Select the right answer using the blue buttons.</p>
-			<VueButton label="+ Add Answer" @click="addAnswer" class="nes-btn is-primary" style="width: 100%; text-align: left;"/>
+			<h1 class="">Réponses</h1>
+			<p class="info nes-text is-primary">Selectionnez la bonne réponse en utilisant les boutons bleus.</p>
+			<VueButton label="+ Ajouter une réponse" @click="addAnswer" class="nes-btn is-primary" style="width: 100%; text-align: left;"/>
 			<br><br>
 			<div v-for="(answer, index) in newQuestion.possibleAnswers" :key="answer.answer_id">
-				<label :for="'answer-' + index">Answer {{ index + 1 }}</label>
+				<label :for="'answer-' + index">Réponse {{ index + 1 }}</label>
 				<div class="answer-input">
 					<VueInputText :id="'answer-' + index" v-model="answer.text" class="nes-input is-dark answer-text"/>
-					<button style="margin-left: 1rem;" :disabled="answer.answer_id == correctAnswerId" :class="['nes-btn is-primary', {'is-disabled' : answer.answer_id == correctAnswerId}]" @click="setRightAnswer(answer.answer_id)">Set as true</button>
-					<button style="margin-left: 0.5rem;" class="nes-btn is-error" @click="removeAnswer(answer.answer_id)">Remove</button>
+					<button style="margin-left: 1rem;" :disabled="answer.answer_id == correctAnswerId" :class="['nes-btn is-primary', {'is-disabled' : answer.answer_id == correctAnswerId}]" @click="setRightAnswer(answer.answer_id)">Bonne réponse</button>
+					<button style="margin-left: 0.5rem;" class="nes-btn is-error" @click="removeAnswer(answer.answer_id)">Supprimer</button>
 				</div>
 			</div>
 			<br>
 			<div class="footer-buttons">
-				<VueButton label="Cancel" class="nes-btn is-error" severity="danger" @click="dialogVisible = false" />
-				<VueButton label="Save" class="nes-btn is-success" @click="saveQuestion" />
+				<VueButton label="Annuler" class="nes-btn is-error" severity="danger" @click="dialogVisible = false" />
+				<VueButton label="Créer" class="nes-btn is-success" @click="saveQuestion" />
 			</div>
 		</div>
 	</div>

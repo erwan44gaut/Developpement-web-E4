@@ -46,7 +46,7 @@ function clickRemoveImageHandler() {
 <template>
   <input tabindex="-1" type="file" name="uploadInput" :disabled="isSaving" @change="fileChange"
     accept="image/jpeg, image/png, image/gif" class="input-file nes-btn" ref="fileInput" />
-  <a class="remove-link" href="#" @click="clickRemoveImageHandler">Supprimer l'image</a>
+  <a class="remove-link" href="#" @click="clickRemoveImageHandler" v-if="fileDataUrl">Supprimer l'image</a>
 </template>
 
 <style scoped>

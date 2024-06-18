@@ -26,13 +26,15 @@ const validatePassword = async () => {
 </script>
 
 <template>
-  <VueDialog v-model:visible="visible" header="Admin Connection" :closable="false">
-    <div class="message">
-      <span>Enter your password.</span>
-    </div>
-    <div class="bottom">
-      <VuePassword id="input" v-model="password" toggleMask :feedback="false" placeholder="......"  class="nes-input"/>
-      <VueButton id="button" type="button" label="Connection" @click="validatePassword" class="nes-input is-success"></VueButton>
+  <VueDialog class="dialog" v-model:visible="visible" header="Admin Connection" :closable="false">
+    <div class="nes-container is-dark">
+      <div class="message">
+        <span>Enter your password.</span>
+      </div>
+      <div class="bottom">
+        <input type="password" id="input" v-model="password" class="nes-input" toggleMask :feedback="false" placeholder="......"/>
+        <button id="button" type="button" label="" @click="validatePassword" class="nes-btn is-success">Connection</button>
+      </div>
     </div>
   </VueDialog>
 </template>
@@ -50,5 +52,10 @@ const validatePassword = async () => {
 
 #input {
   flex: 1;
+}
+
+.dialog *
+{
+  border-radius: 0px !important;
 }
 </style>
