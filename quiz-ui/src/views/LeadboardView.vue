@@ -3,7 +3,7 @@
     <div class="grid">
       <GlobalRanking :scores="scores" v-if="scores.length > 0" containerWidth="45vw" containerHeight="80vh" />
       <div :style="{ width: '45vw', height: '80vh' }" class="chart-container nes-container is-dark with-title">
-        <p class="title">Réponses:</p>
+        <p class="title">Stats:</p>
         <div class="combined-charts">
           <GlobalChart class="chart global-chart"/>
           <ScoreChart class="chart score-chart"/>
