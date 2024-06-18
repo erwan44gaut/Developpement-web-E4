@@ -11,4 +11,4 @@ Nous y avons ajouté de nombreuses fonctionnalités, dont:
 - Scène de résultats animée
 - Barre de progression
   
-Etant donné que l'on a beaucoup de données stastiques et de classement, une page dédiée à été créée plutot que de les mettre à l'accueil.
+Etant donné que l'on a beaucoup de données stastiques et de classement, une page dédiée a été créée plutot que de les mettre à l'accueil.
