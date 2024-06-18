@@ -11,6 +11,8 @@ const props = defineProps<{
 }>();
 const editingAnswerId = ref<number | null>(null);
 const newPosition = ref<number | null>(props.question?.position ?? 0);
+const newTitle = ref<string>(props.question?.title ?? '');
+const newText = ref<string>(props.question?.text ?? '');
 const emits = defineEmits(['refresh-delete-question', 'refresh-change-position', 'close']);
 const imageAsb64 = ref<string | null>(props.question?.image ?? '');
 const uploaded = ref<boolean>(props.question?.image != null && props.question?.image !== '');
@@ -39,11 +41,11 @@ const saveAnswer = (answer_id: number, newText: string) => {
 };
 
 const addAnswer = () => {
-  if (editingAnswerId.value !== null)
-  {
+	if (editingAnswerId.value !== null)
+	{
 		alert('Finish editing first answer before adding a new one.');
-    return;
-  }
+		return;
+	}
 	if (props.question) {
 		const newAnswer: Answer = {
 			answer_id: Date.now(),
@@ -65,19 +67,19 @@ const deleteAnswer = (answer_id: number) => {
 };
 
 const closeEvent = () => {
-  if (editingAnswerId.value != null)
-  {
-		alert('FInish editing answer before closing.');
+	if (editingAnswerId.value != null)
+	{
+		alert('Finish editing answer before closing.');
 		return;
 	}
-  emits('close');
+	emits('close');
 };
 
 const deleteQuestionEvent = () => {
 	if (props.question) {
 		deleteQuestion(props.question);
-    emits('refresh-delete-question', props.question);
-    closeEvent();
+		emits('refresh-delete-question', props.question);
+		closeEvent();
 	}
 };
 
@@ -102,61 +104,42 @@ const setCorrectAnswer = (answer_id: number) => {
 
 const imageFileChangedHandler = (newImage: string) => {
 	if (props.question) {
-    uploaded.value = newImage !== '';
-    props.question.image = newImage;
-    imageAsb64.value = newImage;
+		uploaded.value = newImage !== '';
+		props.question.image = newImage;
+		imageAsb64.value = newImage;
+		updateQuestion(props.question);
+	}
+};
+
+const saveTitle = () => {
+	if (props.question) {
+		props.question.title = newTitle.value;
+		updateQuestion(props.question);
+	}
+};
+
+const saveText = () => {
+	if (props.question) {
+		props.question.text = newText.value;
 		updateQuestion(props.question);
 	}
 };
 </script>
 
 <template>
-
-<!-- <div modal headerless class="dialog">
-  <div class="nes-container is-dark">
-    <label for="title">Titre</label>
-    <VueInputText class="nes-input is-dark" id="title" v-model="newQuestion.title"/>
-
-    <label for="text">Texte</label>
-    <VueInputText class="nes-input is-dark" id="text" v-model="newQuestion.text"/>
-
-    <label for="image">Image</label><br>
-    <div style="display: flex; justify-content: space-between;">
-      <div>
-        <UploadImage @file-change="imageFileChangedHandler" :fileDataUrl="imageAsb64"></UploadImage>
-      </div>
-      <VueImage v-if="uploaded" :src="newQuestion.image" alt="question image" width="100"></VueImage>
-    </div>
-    <br> <br>
-    
-    <label for="position">Position</label>
-    <VueInputText class="nes-input is-dark" id="position" v-model="newQuestion.position" disabled/>
-    
-    <br><br><br>
-    <h1 class="">Réponses</h1>
-    <p class="info nes-text is-primary">Selectionnez la bonne réponse en utilisant les boutons bleus.</p>
-    <VueButton label="+ Ajouter une réponse" @click="addAnswer" class="nes-btn is-primary" style="width: 100%; text-align: left;"/>
-    <br><br>
-    <div v-for="(answer, index) in newQuestion.possibleAnswers" :key="answer.answer_id">
-      <label :for="'answer-' + index">Réponse {{ index + 1 }}</label>
-      <div class="answer-input">
-        <VueInputText :id="'answer-' + index" v-model="answer.text" class="nes-input is-dark answer-text"/>
-        <button style="margin-left: 1rem;" :disabled="answer.answer_id == correctAnswerId" :class="['nes-btn is-primary', {'is-disabled' : answer.answer_id == correctAnswerId}]" @click="setRightAnswer(answer.answer_id)">Bonne réponse</button>
-        <button style="margin-left: 0.5rem;" class="nes-btn is-error" @click="removeAnswer(answer.answer_id)">Supprimer</button>
-      </div>
-    </div>
-    <br>
-    <div class="footer-buttons">
-      <VueButton label="Annuler" class="nes-btn is-error" severity="danger" @click="dialogVisible = false" />
-      <VueButton label="Créer" class="nes-btn is-success" @click="saveQuestion" />
-    </div>
-  </div>
-</div> -->
-
 <div modal headerless class="dialog">
     <div class="nes-container is-dark">
-      <h2>{{ question?.title }}</h2>
-      <h3>{{ question?.text }}</h3>
+      <div class="title">
+        <p>Titre:</p>
+        <input type="text" v-model="newTitle" class="nes-input" placeholder="Titre de la question"/>
+        <button class="nes-btn is-success" @click="saveTitle">Save</button>
+        <br><br>
+      </div>
+      <div class="text">
+        <p>Texte:</p>
+        <textarea v-model="newText" class="nes-textarea" placeholder="Texte de la question"></textarea>
+        <button class="nes-btn is-success" @click="saveText">Save</button>
+      </div>
       <div class="position">
             <p>Position:</p>
             <input class="nes-input" style="width: 5rem;" type="number" v-model.number="newPosition" :min="1" :max="props.totalNumberOfQuestions"/>
@@ -319,40 +302,40 @@ input {
 
 .dialog
 {
-	padding: 0;
-	margin: 0;
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background-color: rgba(0, 0, 0, 0.5);
-	overflow: auto;
+    padding: 0;
+    margin: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow: auto;
   z-index: 9999;
 }
 
 .nes-container {
-	margin: 10%;
+    margin: 10%;
 }
 
 .answer-input
 {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .answer-text
 {
-	widows: 70%;
+    widows: 70%;
 }
 
 .nes-btn {
-	white-space: nowrap;
+    white-space: nowrap;
 }
 
 #text, #title, #position, #image {
-	margin-bottom: 2em;
+    margin-bottom: 2em;
 }
 </style>

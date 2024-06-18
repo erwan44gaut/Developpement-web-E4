@@ -1,7 +1,8 @@
 <template>
 	<div class="content">
 		<transition name="fade" mode="out-in">
-			<QuestionDisplay v-if="currentQuestion" :key="currentQuestion.id" :questionNumber="currentQuestionPosition" :questionsAmount="totalNumberOfQuestions" :question="currentQuestion" @answer-clicked="answerClickedHandler" />
+			<h4 v-if="totalNumberOfQuestions == 0" style="margin-top: 8rem;">There is no quiz without questions...</h4>
+			<QuestionDisplay v-else-if="currentQuestion" :key="currentQuestion.id" :questionNumber="currentQuestionPosition" :questionsAmount="totalNumberOfQuestions" :question="currentQuestion" @answer-clicked="answerClickedHandler" />
 			<div v-else>Loading question...</div>
 		</transition>
 	</div>
