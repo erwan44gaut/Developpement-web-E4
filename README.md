@@ -13,4 +13,5 @@ Nous y avons ajouté de nombreuses fonctionnalités, dont:
   
 Etant donné que l'on a beaucoup de données stastiques et de classement, une page dédiée a été créée plutot que de les mettre à l'accueil.
 
-![Schéma de la base de données](public/bdd.png)
+Voici le schéma de la base de données utilisée dans ce projet. La base de données est une SQLite, et elle contient quatre tables principales : `questions`, `answers`, `participations` et `participation_answers`. Ce schéma permet de gérer les relations entre les questions, les réponses, et les participations des utilisateurs aux quiz.
+![Schéma de la base de données](quiz-ui/public/bdd.png)
