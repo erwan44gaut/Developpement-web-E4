@@ -95,7 +95,7 @@ def submit_participation():
     
     correct_answers = 0
     answers_id = []
-    print(questions)
+
     for i in range(len(answers)) :
         cursor.execute("SELECT answer_id, is_correct FROM answers WHERE question_id = ?", questions[i])
         answers_per_question = cursor.fetchall()
@@ -138,7 +138,6 @@ def create_question():
     try:
         # Start a transaction
         db.execute("BEGIN")
-        print("Transaction started")
 
         # Shift positions up for questions at and after the new position, starting from the bottom
         cursor.execute("""
@@ -154,15 +153,12 @@ def create_question():
                 WHERE position = ?
                 """, (pos,))
 
-        print("Positions shifted up")
-
         # Insert the new question
         cursor.execute("""
         INSERT INTO questions (question_title, question_text, image_url, position)
         VALUES (?, ?, ?, ?)
         """, (question_title, question_text, image_url, position))
         question_id = cursor.lastrowid
-        print(f"Inserted new question with ID: {question_id}")
 
         # Insert possible answers
         for answer in possible_answers:
@@ -170,33 +166,29 @@ def create_question():
             INSERT INTO answers (question_id, answer_text, is_correct)
             VALUES (?, ?, ?)
             """, (question_id, answer['text'], answer['isCorrect']))
-        print("Inserted possible answers")
 
         # Commit the transaction
         db.commit()
-        print("Transaction committed")
         return jsonify({"id": question_id}), 200
 
     except sqlite3.IntegrityError as e:
         db.rollback()
-        print("Database error: " + str(e))
         return jsonify({"error": "Database error: " + str(e)}), 500
 
     except Exception as e:
         db.rollback()
-        print("Server error: " + str(e))
         return jsonify({"error": "Server error: " + str(e)}), 500
 
 @quiz_bp.route('/questions/<int:question_id>', methods=['PUT'])
 def update_question(question_id):
-    print("a")
     auth_header = request.headers.get('Authorization')
     if not auth_header or not utils.jwt_utils.decode_token(auth_header):
         return jsonify({"error": "Unauthorized"}), 401
 
     db = get_db()
     cursor = db.cursor()
-
+    cursor.execute("SELECT * FROM questions")
+    result = cursor.fetchall()
     # Fetch the current position and check if the question exists
     cursor.execute("SELECT position FROM questions WHERE question_id = ?", (question_id,))
     result = cursor.fetchone()
@@ -212,7 +204,7 @@ def update_question(question_id):
     image_url = data.get('image')
     new_position = data.get('position')
     possible_answers = data.get('possibleAnswers')
-
+    
     try:
         # Start a transaction
         db.execute("BEGIN")
@@ -230,7 +222,6 @@ def update_question(question_id):
                     """, (pos,))
             else:
                 for pos in range(current_position-1, new_position-1,-1):
-                    print("pos ::" +str(pos))
                     cursor.execute("""
                     UPDATE questions
                     SET position = position + 1
@@ -249,33 +240,24 @@ def update_question(question_id):
 
         cursor.execute("SELECT answer_id,answer_text,is_correct FROM answers WHERE question_id = ?",(question_id,))
         answers = cursor.fetchall()
-        answer_without_id = [answer[1:] for answer in answers]
+        answers_without_id = [tuple(answer[1:]) for answer in answers]
         new_answers = [(answer['text'],answer['isCorrect']) for answer in possible_answers]
         
-        #Delete answer
-        if len(answers)>len(new_answers) :
-            for answer in answers :
-                if answer[1:] not in answers :
-                    cursor.execute("DELETE FROM participation_answers WHERE answer_id = ?",(answer[0],))
-                    cursor.execute("DELETE FROM answers where answer_id = ?",(answer[0],))
-                    break
-                    
-                    
-        elif len(answers)<len(new_answers) :
+        # if answers have been modified
+        if answers_without_id != new_answers :
             cursor.execute("""
+                DELETE FROM participation_answers 
+                WHERE answer_id IN (
+                    SELECT answer_id FROM answers WHERE question_id = ?
+                )
+            """, (question_id,))
+            cursor.execute("DELETE FROM answers WHERE question_id = ?",(question_id,))
+             # Insert possible answers
+            for answer in possible_answers:
+                cursor.execute("""
                 INSERT INTO answers (question_id, answer_text, is_correct)
                 VALUES (?, ?, ?)
-                """, (question_id, new_answers[-1][0], new_answers[-1][1]))
-        
-        else :
-            for index,answer in enumerate(answers):
-                if answer[1:]!=new_answers[index]:
-                    cursor.execute("DELETE FROM participation_answers WHERE answer_id = ?",(answer[0],))
-                    cursor.execute("""
-                        UPDATE answers
-                        SET answer_text = ?, is_correct = ?
-                        WHERE answer_id = ?
-                        """, (new_answers[index][0],new_answers[index][1],answer[0],))
+                """, (question_id, answer['text'], answer['isCorrect']))
                 
         # Commit the transaction
         db.commit()
