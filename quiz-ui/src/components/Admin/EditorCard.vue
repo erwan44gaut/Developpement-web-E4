@@ -72,6 +72,15 @@ const updatePosition = () => {
 		emits('refresh-change-position', props.question.id, newPosition.value);
 	}
 };
+
+const setCorrectAnswer = (answer_id: number) => {
+	if (props.question) {
+		props.question.possibleAnswers.forEach(answer => {
+			answer.isCorrect = (answer.answer_id === answer_id);
+		});
+		updateQuestion(props.question);
+	}
+};
 </script>
 
 <template>
@@ -81,14 +90,14 @@ const updatePosition = () => {
       <h3>{{ question?.text }}</h3>
       <div class="position">
             <p>Position</p>
-            <VueInputText type="number" v-model.number="newPosition" min="1" max="props.totalNumberOfQuestions"></VueInputText>
+            <VueInputText type="number" v-model.number="newPosition" :min="1" :max="props.totalNumberOfQuestions"></VueInputText>
             <p>/{{ props.totalNumberOfQuestions }}</p>
             <i class="pi pi-check" @click="updatePosition()"></i>
       </div>
-	<div class="image">
-		<p>Image</p>
-		<VueInputText :value="question?.image" />
-		<i class="pi pi-check" @click="updatePosition()"></i>
+    <div class="image">
+        <p>Image</p>
+        <VueInputText :value="question?.image" />
+        <i class="pi pi-check" @click="updatePosition()"></i>
     </div>
     <div class="answers">
       <div class="answer" v-for="answer in question?.possibleAnswers" :key="answer.answer_id">
@@ -99,17 +108,19 @@ const updatePosition = () => {
           </div>
           <template v-else>
             {{ answer.text }}
+            <i v-if="answer.isCorrect" class="pi pi-check-circle"></i>
           </template>
         </div>
         <div class="icons">
+          <i id="select-right-answer" class="pi pi-check-circle" :value="answer.answer_id" @click="setCorrectAnswer(answer.answer_id)"></i>
           <i class="pi pi-pencil" @click="startEditing(answer.answer_id)"></i>
           <i class="pi pi-trash" @click="deleteAnswer(answer.answer_id)"></i>
         </div>
       </div>
     </div>
     <div class="add-answer">
-		<VueButton @click="addAnswer" class="add-button">Add answer</VueButton>
-		<VueButton @click="deleteQuestionEvent()" severity="danger" class="delete-button">Delete question</VueButton>
+        <VueButton @click="addAnswer" class="add-button">Add answer</VueButton>
+        <VueButton @click="deleteQuestionEvent()" severity="danger" class="delete-button">Delete question</VueButton>
     </div>
   </div>
 </div>
@@ -138,6 +149,10 @@ const updatePosition = () => {
   align-items: center;
   justify-content: space-between;
   padding: 10px 0;
+}
+
+.radio-answer {
+  margin-right: 2em;
 }
 
 .answer-text {
@@ -215,6 +230,24 @@ input {
 }
 
 .pi.pi-check:hover {
+    background-color: #10B981;
+    color: white;
+}
+
+#select-right-answer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    min-height: 40px;
+    max-width: 40px;
+    max-height: 40px;
+    border-radius: 50%;
+    border: 1px solid #10B981;
+    color: #10B981;
+}
+
+#select-right-answer:hover {
     background-color: #10B981;
     color: white;
 }
