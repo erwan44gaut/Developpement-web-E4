@@ -115,7 +115,7 @@ onMounted(quizInfo);
 <template>
   <div>
     <div class="add nes-btn is-success" @click="dialogVisible = true">
-      <span class="add-text">Add new question</span>
+      <span class="add-text">Ajouter une question</span>
     </div>
 
 	<div v-if="dialogVisible" modal headerless class="dialog">

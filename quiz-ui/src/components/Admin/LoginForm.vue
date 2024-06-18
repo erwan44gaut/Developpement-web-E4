@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { authenticate } from '@/services/QuizApiService';
+import { onMounted } from 'vue';
 
 const visible = ref(true);
 const password = ref('');
@@ -22,6 +23,13 @@ const validatePassword = async () => {
 		router.push({ name: 'home' });
 	}
 };
+
+onMounted(() => {
+  const authToken = sessionStorage.getItem('authToken');
+  if (authToken) {
+    router.push({ name: 'admin' });
+  }
+});
 
 </script>
 
