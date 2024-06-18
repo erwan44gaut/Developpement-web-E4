@@ -53,6 +53,7 @@ const totalRefresh = () => {
 	questions.value = [];
 	loadQuestions();
 	isLoading.value = false;
+	location.reload();
 };
 
 const selectQuestion = (question: Question) => {
