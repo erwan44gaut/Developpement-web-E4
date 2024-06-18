@@ -1,7 +1,7 @@
 <template>
     <div :style="{ width: containerWidth, height: containerHeight }" class="classement-container nes-container is-dark with-title">
       <p class="title">Classement:</p>
-      <VueScrollPanel>
+      <VueScrollPanel v-if="scores.length > 0">
         <VueDataTable :value="props.scores" scrollable>
           <VueColumn header="Rang">
             <template #body="slotProps">
