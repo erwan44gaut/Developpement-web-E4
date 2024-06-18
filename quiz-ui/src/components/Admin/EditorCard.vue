@@ -90,25 +90,25 @@ const setCorrectAnswer = (answer_id: number) => {
       <h3>{{ question?.text }}</h3>
       <div class="position">
             <p>Position</p>
-            <VueInputText type="number" v-model.number="newPosition" :min="1" :max="props.totalNumberOfQuestions"></VueInputText>
+            <VueInputText type="number" v-model.number="newPosition" :min="1" :max="props.totalNumberOfQuestions" class="nes-input"></VueInputText>
             <p>/{{ props.totalNumberOfQuestions }}</p>
             <i class="pi pi-check" @click="updatePosition()"></i>
       </div>
     <div class="image">
         <p>Image</p>
-        <VueInputText :value="question?.image" />
+        <VueInputText :value="question?.image" class="nes-input"/>
         <i class="pi pi-check" @click="updatePosition()"></i>
     </div>
     <div class="answers">
       <div class="answer" v-for="answer in question?.possibleAnswers" :key="answer.answer_id">
         <div class="answer-text">
           <div v-if="editingAnswerId === answer.answer_id" class="foo">
-            <VueInputText type="text" v-model="answer.text" />
+            <VueInputText type="text" v-model="answer.text" class="nes-input"/>
             <i class="pi pi-check" @click="saveAnswer(answer.answer_id, answer.text)"></i>
           </div>
           <template v-else>
             {{ answer.text }}
-            <i v-if="answer.isCorrect" class="pi pi-check-circle"></i>
+            <i v-if="answer.isCorrect" class="pi pi-check-circle" id="right-answer-indicator"></i>
           </template>
         </div>
         <div class="icons">
@@ -119,8 +119,8 @@ const setCorrectAnswer = (answer_id: number) => {
       </div>
     </div>
     <div class="add-answer">
-        <VueButton @click="addAnswer" class="add-button">Add answer</VueButton>
-        <VueButton @click="deleteQuestionEvent()" severity="danger" class="delete-button">Delete question</VueButton>
+        <VueButton @click="addAnswer" class="add-button nes-btn is-primary">Add answer</VueButton>
+        <VueButton @click="deleteQuestionEvent()" severity="danger" class="delete-button nes-btn is-error">Delete question</VueButton>
     </div>
   </div>
 </div>
@@ -257,5 +257,9 @@ input {
     gap: 1em;
     align-items: baseline;
     margin-top: 0.5em;
+}
+
+#right-answer-indicator {
+  color: #10B981;
 }
 </style>

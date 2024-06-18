@@ -1,19 +1,14 @@
 <script setup lang="ts">
 import { getQuestionByPosition, getQuizInfo, updateQuestion } from '@/services/QuizApiService';
-import { Question } from '@/types';
+import { type Question } from '@/types';
 import { onMounted, ref } from 'vue';
 import AddQuestion from './AddQuestion.vue';
 import EditorCard from './EditorCard.vue';
-import Dialog from 'primevue/dialog';
+
 const questions = ref<Question[]>([]);
 const totalNumberOfQuestions = ref<number>(0);
 const isLoading = ref(true);
 const selectedQuestion = ref<Question | null>(null);
-
-const selectQuestion = (question: Question) =>
-{
-	selectedQuestion.value = question;
-};
 
 const loadQuestions = async () => {
 	try {
@@ -60,31 +55,39 @@ const totalRefresh = () => {
 	isLoading.value = false;
 };
 
+const selectQuestion = (question: Question) => {
+	selectedQuestion.value = question;
+};
 
+const closeDialog = () => {
+	selectedQuestion.value = null;
+};
 </script>
+
 
 <template>
 	<div>
 		<div v-if="isLoading" class="loader-container">
 			<VueProgressSpinner />
 		</div>
-		<Dialog :visible="selectedQuestion != null" modal :style="{ width: '25rem' }" class="editor-card-container nes-container is-dark" headerless>
-            <template #container="{ closeCallback }">
-                <div class="dialog-content">
-					<EditorCard
-						class="question"
-						:question="selectedQuestion"
-						:totalNumberOfQuestions="totalNumberOfQuestions.valueOf()"
-						@refresh-delete-question="totalRefresh"
-						@refresh-change-position="refreshChangePosition"
-					/>
-                </div>
-            </template>
-        </Dialog>
+		<VueDialog v-model:visible="selectedQuestion" modal>
+			<div class="dialog-content">
+				<EditorCard
+					class="question"
+					:question="selectedQuestion"
+					:totalNumberOfQuestions="totalNumberOfQuestions.valueOf()"
+					@refresh-delete-question="totalRefresh"
+					@refresh-change-position="refreshChangePosition"
+				/>
+			</div>
+			<template>
+				<VueButton label="Close" @click="closeDialog" />
+			</template>
+        </VueDialog>
 		<div class="editor-grid">
 			<template v-for="question in questions" :key="question.id">
 				<div class="question nes-btn" @click="selectQuestion(question)">
-  					<span>{{ question?.position }} {{ question?.title }}</span>
+					<span>{{ question?.position }} {{ question?.title }}</span>
 				</div>
 			</template>
 			<AddQuestion 

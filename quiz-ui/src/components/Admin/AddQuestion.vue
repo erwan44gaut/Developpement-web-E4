@@ -110,34 +110,34 @@ onMounted(quizInfo);
     <VueDialog header="Add Question" v-model:visible="dialogVisible" :modal="true" :closable="false">
       <div class="dialog">
         <label for="title">Title</label>
-        <VueInputText id="title" v-model="newQuestion.title"/>
+        <VueInputText id="title" v-model="newQuestion.title"  class="nes-input" />
 
         <label for="text">Text</label>
-        <VueInputText id="text" v-model="newQuestion.text"/>
+        <VueInputText id="text" v-model="newQuestion.text"  class="nes-input" />
 
         <label for="image">Image URL</label>
-        <VueInputText id="image" v-model="newQuestion.image"/>
+        <VueInputText id="image" v-model="newQuestion.image"  class="nes-input" />
 
         <label for="position">Position</label>
-        <VueInputText id="position" v-model="newQuestion.position" disabled/>
+        <VueInputText id="position" v-model="newQuestion.position" disabled class="nes-input is-dark" />
 
         <div v-for="(answer, index) in newQuestion.possibleAnswers" :key="answer.answer_id" class="answer-container">
           <label :for="'answer-' + index">Answer {{ index + 1 }}</label>
           <div class="answer-input">
-            <VueInputText :id="'answer-' + index" v-model="answer.text" class="answer-text" />
+            <VueInputText :id="'answer-' + index" v-model="answer.text" class="answer-text nes-input" />
             <VueRadioButton :value="answer.answer_id" v-model="correctAnswerId" />
             <i class="pi pi-trash" @click="removeAnswer(answer.answer_id)"></i>
           </div>
         </div>
 
-        <VueButton label="Add Answer" @click="addAnswer" class="mb-3" />
+        <VueButton label="Add Answer" @click="addAnswer" class="add-question-button nes-btn is-primary"/>
       </div>
       <p class="info">Click on one of the radio buttons, to select the right answer.</p>
 
       <template #footer>
         <div class="footer-buttons">
-          <VueButton label="Cancel" icon="pi pi-times" class="cancel-button" severity="danger" @click="dialogVisible = false" />
-          <VueButton label="Save" icon="pi pi-check" class="save-button" @click="saveQuestion" />
+          <VueButton label=" Cancel" icon="pi pi-times" class="cancel-button nes-btn is-error" severity="danger" @click="dialogVisible = false" />
+          <VueButton label=" Save" icon="pi pi-check" class="save-button nes-btn is-success" @click="saveQuestion" />
         </div>
       </template>
     </VueDialog>
@@ -150,9 +150,12 @@ onMounted(quizInfo);
   height: 100%;
 }
 
-
 i.pi.pi-plus {
   font-size: 24px;
+}
+
+.add-question-button {
+  margin: 1em 0;
 }
 
 .pi.pi-trash {
@@ -211,6 +214,9 @@ i.pi.pi-plus {
 .info {
   color: red;
   font-size: 0.8em;
-  
+}
+
+#title, #text, #image, #position {
+	margin-bottom: 1em;
 }
 </style>

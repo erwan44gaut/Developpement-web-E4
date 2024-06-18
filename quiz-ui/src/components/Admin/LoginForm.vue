@@ -31,8 +31,8 @@ const validatePassword = async () => {
       <span>Enter your password.</span>
     </div>
     <div class="bottom">
-      <VuePassword id="input" v-model="password" toggleMask :feedback="false" placeholder="******" />
-      <VueButton id="button" type="button" label="Connection" @click="validatePassword"></VueButton>
+      <VuePassword id="input" v-model="password" toggleMask :feedback="false" placeholder="......"  class="nes-input"/>
+      <VueButton id="button" type="button" label="Connection" @click="validatePassword" class="nes-input is-success"></VueButton>
     </div>
   </VueDialog>
 </template>
