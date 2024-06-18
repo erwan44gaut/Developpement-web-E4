@@ -1,5 +1,6 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <script setup lang="ts">
+import UploadImage from '@/components/Admin/UploadImage.vue';
 import { deleteQuestion, updateQuestion } from '@/services/QuizApiService';
 import { type Answer, type Question } from '@/types';
 import { defineEmits, defineProps, ref } from 'vue';
@@ -11,6 +12,7 @@ const props = defineProps<{
 const editingAnswerId = ref<number | null>(null);
 const newPosition = ref<number | null>(props.question?.position ?? 0);
 const emits = defineEmits(['refresh-delete-question', 'refresh-change-position']);
+const imageAsb64 = ref<string | null>(props.question?.image ?? '');
 
 const startEditing = (answer_id: number) => {
 	editingAnswerId.value = answer_id;
@@ -81,6 +83,13 @@ const setCorrectAnswer = (answer_id: number) => {
 		updateQuestion(props.question);
 	}
 };
+
+const imageFileChangedHandler = (newImage: string) => {
+	if (props.question) {
+		props.question.image = newImage;
+		updateQuestion(props.question);
+	}
+};
 </script>
 
 <template>
@@ -94,11 +103,11 @@ const setCorrectAnswer = (answer_id: number) => {
             <p>/{{ props.totalNumberOfQuestions }}</p>
             <i class="pi pi-check" @click="updatePosition()"></i>
       </div>
-    <div class="image">
-        <p>Image</p>
-        <VueInputText :value="question?.image" class="nes-input"/>
-        <i class="pi pi-check" @click="updatePosition()"></i>
-    </div>
+      <div class="image">
+          <p>Image</p>
+          <UploadImage @file-change="imageFileChangedHandler" :fileDataUrl="imageAsb64"></UploadImage>
+          <VueImage :src="question?.image" alt="question image" width="100" height="100"></VueImage>
+      </div>
     <div class="answers">
       <div class="answer" v-for="answer in question?.possibleAnswers" :key="answer.answer_id">
         <div class="answer-text">
