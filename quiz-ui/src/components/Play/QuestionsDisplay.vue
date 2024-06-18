@@ -8,7 +8,7 @@
                         {{ question.text }}
                     </div>
                     <br>
-                    <VueImage v-if="question.image" :src="question.image" :alt="question.text" width="250" height="250" preview />
+                    <VueImage v-if="question.image" :src="question.image" :alt="question.text" height="250" preview />
                     <br>
                     <br>
                     <div>
