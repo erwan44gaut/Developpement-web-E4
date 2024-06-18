@@ -131,14 +131,18 @@ const saveText = () => {
     <div class="nes-container is-dark">
       <div class="title">
         <p>Titre:</p>
-        <input type="text" v-model="newTitle" class="nes-input" placeholder="Titre de la question"/>
-        <button class="nes-btn is-success" @click="saveTitle">Save</button>
+        <div style="display: flex;">
+          <input type="text" v-model="newTitle" class="nes-input" placeholder="Titre de la question"/>
+          <button class="nes-btn is-success" @click="saveTitle">Save</button>
+        </div>
         <br><br>
       </div>
       <div class="text">
         <p>Texte:</p>
-        <textarea v-model="newText" class="nes-textarea" placeholder="Texte de la question"></textarea>
-        <button class="nes-btn is-success" @click="saveText">Save</button>
+        <div style="display: flex;">
+          <textarea v-model="newText" class="nes-textarea" placeholder="Texte de la question"></textarea>
+          <button class="nes-btn is-success" @click="saveText">Save</button>
+        </div>
       </div>
       <div class="position">
             <p>Position:</p>

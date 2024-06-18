@@ -26,14 +26,14 @@ const validatePassword = async () => {
 </script>
 
 <template>
-  <VueDialog class="dialog" v-model:visible="visible" header="Admin Connection" :closable="false">
+  <VueDialog class="dialog" v-model:visible="visible" header="Connexion Administrateur" :closable="false">
     <div class="nes-container is-dark">
       <div class="message">
-        <span>Enter your password.</span>
+        <span>Entrez le mot de passe.</span>
       </div>
       <div class="bottom">
         <input type="password" id="input" v-model="password" class="nes-input" toggleMask :feedback="false" placeholder="......"/>
-        <button id="button" type="button" label="" @click="validatePassword" class="nes-btn is-success">Connection</button>
+        <button id="button" type="button" label="" @click="validatePassword" class="nes-btn is-success">Connexion</button>
       </div>
     </div>
   </VueDialog>
