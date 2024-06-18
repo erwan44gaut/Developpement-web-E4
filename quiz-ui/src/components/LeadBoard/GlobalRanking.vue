@@ -43,7 +43,7 @@ const props = defineProps({
 	},
 	containerHeight: {
 		type: String,
-		default: '400px'
+		default: '100vh'
 	}
 });
   
@@ -64,7 +64,7 @@ onMounted(() => {
   <style scoped>
   .p-datatable {
     width: 100%;
-    height: 30rem;
+    height: 70vh;
   }
   .avatar-image {
     width: 32px;

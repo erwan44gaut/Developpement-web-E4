@@ -1,12 +1,17 @@
 <template>
-	<VueChart class="chart" type="bar" :data="chartData" :options="chartOptions"></VueChart>
+        <VueChart class="chart" type="bar" :data="chartData" :options="chartOptions"></VueChart>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { getCorrectIncorrectCounts } from '@/services/QuizApiService';
+import { getAllScores } from '@/services/QuizApiService';
 import { Chart as ChartJS } from 'chart.js';
 ChartJS.defaults.font.family = 'RetroFont';
+
+// Interface pour les scores
+interface Score {
+    score: number;
+}
 
 // Props pour la taille du conteneur
 const props = defineProps({
@@ -25,13 +30,7 @@ const chartData = ref({
 	labels: [] as string[],
 	datasets: [
 		{
-			label: 'Incorrect',
-			backgroundColor: '#EF5350',
-			borderColor: '#D32F2F',
-			data: [] as number[]
-		},
-		{
-			label: 'Correct',
+			label: 'Number of People',
 			backgroundColor: '#9CCC65',
 			borderColor: '#7CB342',
 			data: [] as number[]
@@ -43,11 +42,11 @@ const chartOptions = ref({
 	responsive: true,
 	plugins: {
 		legend: {
-			position: 'top',
+			display: false,
 		},
 		title: {
 			display: true,
-			text: 'Correct vs Incorrect Answers per Question'
+			text: 'Number of People by Score'
 		}
 	},
 	animation: {
@@ -65,11 +64,17 @@ const chartOptions = ref({
 
 // Fonction pour charger les données du graphique
 const loadChartData = async () => {
-	const counts = await getCorrectIncorrectCounts();
+	const scores: Score[] = await getAllScores();
 
-	chartData.value.labels = counts.map((item, index) => `Question ${index + 1}`);
-	chartData.value.datasets[0].data = counts.map(item => item.is_not_correct);
-	chartData.value.datasets[1].data = counts.map(item => item.is_correct);
+	// Compter le nombre de personnes pour chaque score
+	const scoreCounts = scores.reduce((acc, { score }) => {
+		acc[score] = (acc[score] || 0) + 1;
+		return acc;
+	}, {} as Record<number, number>);
+
+	// Mettre à jour les données du graphique
+	chartData.value.labels = Object.keys(scoreCounts).map(score => `Score ${score}`);
+	chartData.value.datasets[0].data = Object.values(scoreCounts);
 };
 
 // Charger les données du graphique lors du montage du composant

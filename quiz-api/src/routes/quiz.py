@@ -3,6 +3,9 @@ from flask import Blueprint, request, jsonify
 from db import get_db
 import datetime
 import utils.jwt_utils
+import glob
+import os
+import random
 
 quiz_bp = Blueprint('quiz', __name__)
 @quiz_bp.route('/quiz-info', methods=['GET'])
@@ -72,6 +75,13 @@ def submit_participation():
     username = payload['playerName']
     answers = payload['answers']
     avatarName = payload.get('avatarName')
+    if not avatarName:
+        files = glob.glob(os.path.join('../../public/grades', '*.png'))
+        if files:
+            selected_file = random.choice(files)
+            avatarName = selected_file.split('.png')[0]
+        else:
+            avatarName = None
 
     cursor = db.cursor()
     cursor.execute("SELECT question_id FROM questions ORDER BY position")
@@ -266,7 +276,6 @@ def update_question(question_id):
                         SET answer_text = ?, is_correct = ?
                         WHERE answer_id = ?
                         """, (new_answers[index][0],new_answers[index][1],answer[0],))
-                    break
                 
         # Commit the transaction
         db.commit()
