@@ -111,7 +111,7 @@ onMounted(quizInfo);
       <span class="add-text">Add new question</span>
     </div>
 
-	<div :visible="dialogVisible" modal headerless class="dialog">
+	<div v-if="dialogVisible" modal headerless class="dialog">
 		<div class="nes-container is-dark">
 			<label for="title">Title</label>
 			<VueInputText class="nes-input is-dark" id="title" v-model="newQuestion.title"/>
