@@ -1,11 +1,13 @@
 <script setup lang="ts">
+import UploadImage from '@/components/Admin/UploadImage.vue';
 import { createQuestion, getQuizInfo } from '@/services/QuizApiService';
 import { type Question } from '@/types';
 import { defineEmits, onMounted, ref } from 'vue';
-import Dialog from 'primevue/dialog';
 
+const imageAsb64 = ref<string | null>('');
 const dialogVisible = ref(false);
 const emits = defineEmits(['refresh-new-question']);
+const uploaded = ref(false);  // Changement ici
 
 const quizInfo = async () => {
 	try {
@@ -102,6 +104,11 @@ const saveQuestion = async () => {
 	}
 };
 
+const imageFileChangedHandler = (newImage: string) => {
+	uploaded.value = newImage !== '';
+	newQuestion.value.image = newImage;
+};
+
 onMounted(quizInfo);
 </script>
 
@@ -119,8 +126,9 @@ onMounted(quizInfo);
 			<label for="text">Text</label>
 			<VueInputText class="nes-input is-dark" id="text" v-model="newQuestion.text"/>
 
-			<label for="image">Image URL</label>
-			<VueInputText class="nes-input is-dark" id="image" v-model="newQuestion.image"/>
+			<label for="image">Image</label>
+			<UploadImage @file-change="imageFileChangedHandler" :fileDataUrl="imageAsb64"></UploadImage>
+			<VueImage v-if="uploaded" :src="newQuestion.image" alt="question image" width="100" height="100"></VueImage>
 
 			<label for="position">Position</label>
 			<VueInputText class="nes-input is-dark" id="position" v-model="newQuestion.position" disabled/>
@@ -168,7 +176,7 @@ onMounted(quizInfo);
 }
 
 .nes-container {
-	  margin: 10%;
+	margin: 10%;
 }
 
 .answer-input
@@ -186,5 +194,9 @@ onMounted(quizInfo);
 
 .nes-btn {
 	white-space: nowrap;
+}
+
+#text, #title, #position, #image {
+	margin-bottom: 2em;
 }
 </style>
