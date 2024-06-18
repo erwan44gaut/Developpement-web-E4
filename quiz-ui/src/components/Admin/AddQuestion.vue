@@ -102,7 +102,7 @@ onMounted(quizInfo);
 
 <template>
   <div>
-    <div class="add" @click="dialogVisible = true">
+    <div class="add nes-btn is-success" @click="dialogVisible = true">
       <span class="add-text">Add new question</span>
       <i class="pi pi-plus"></i>
     </div>
@@ -146,22 +146,10 @@ onMounted(quizInfo);
 
 <style scoped>
 .add {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  background-color: rgba(16, 185, 129, 0.7);
-  color: white;
-  border-radius: 10px;
   width: 100%;
   height: 100%;
-  cursor: pointer;
 }
 
-.add:hover {
-  background-color: rgba(16, 185, 129, 1);
-  border: 1px solid white;
-}
 
 i.pi.pi-plus {
   font-size: 24px;

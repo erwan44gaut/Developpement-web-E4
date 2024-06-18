@@ -1,13 +1,19 @@
 <script setup lang="ts">
 import { getQuestionByPosition, getQuizInfo, updateQuestion } from '@/services/QuizApiService';
-import { type Question } from '@/types';
+import { Question } from '@/types';
 import { onMounted, ref } from 'vue';
 import AddQuestion from './AddQuestion.vue';
 import EditorCard from './EditorCard.vue';
-
+import Dialog from 'primevue/dialog';
 const questions = ref<Question[]>([]);
 const totalNumberOfQuestions = ref<number>(0);
 const isLoading = ref(true);
+const selectedQuestion = ref<Question | null>(null);
+
+const selectQuestion = (question: Question) =>
+{
+	selectedQuestion.value = question;
+};
 
 const loadQuestions = async () => {
 	try {
@@ -53,6 +59,8 @@ const totalRefresh = () => {
 	loadQuestions();
 	isLoading.value = false;
 };
+
+
 </script>
 
 <template>
@@ -60,15 +68,24 @@ const totalRefresh = () => {
 		<div v-if="isLoading" class="loader-container">
 			<VueProgressSpinner />
 		</div>
+		<Dialog :visible="selectedQuestion != null" modal :style="{ width: '25rem' }" class="editor-card-container nes-container is-dark" headerless>
+            <template #container="{ closeCallback }">
+                <div class="dialog-content">
+					<EditorCard
+						class="question"
+						:question="selectedQuestion"
+						:totalNumberOfQuestions="totalNumberOfQuestions.valueOf()"
+						@refresh-delete-question="totalRefresh"
+						@refresh-change-position="refreshChangePosition"
+					/>
+                </div>
+            </template>
+        </Dialog>
 		<div class="editor-grid">
 			<template v-for="question in questions" :key="question.id">
-				<EditorCard 
-				class="question" 
-				:question="question"
-				:totalNumberOfQuestions="totalNumberOfQuestions.valueOf()"
-				@refresh-delete-question="totalRefresh"
-				@refresh-change-position="refreshChangePosition"
-				/>
+				<div class="question nes-btn" @click="selectQuestion(question)">
+  					<span>{{ question?.position }} {{ question?.title }}</span>
+				</div>
 			</template>
 			<AddQuestion 
 				@refresh-new-question="totalRefresh"
@@ -93,13 +110,21 @@ const totalRefresh = () => {
 }
 
 .editor-grid {
-	display: grid;
-	gap: 10px;
-	grid-template-columns: repeat(3, 1fr);
+	margin: 1rem;
+	margin-top: 35px;
+	display: flex;
+	flex-direction: column;
 }
 
-.question {
-  border: 1px solid rgba(0, 0, 0, 0.8);
-  text-align: center;
+.question
+{
+  width: 100%;
+  text-align: left;
 }
+
+.editor-card-container 
+{
+  padding: 0;
+}
+
 </style>
