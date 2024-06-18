@@ -4,6 +4,7 @@
 		<div style="font-weight: normal; width: 100%;">Félicitations, {{ playerName }}!</div>
         <div style="font-weight: normal; width: 100%; font-size: 1.2rem;">Votre score : {{ score }}</div>
 		<div style="font-weight: normal; width: 100%; font-size: 1.2rem;">Votre avez atteint le grade : {{ gradeString }}</div>
+		<br>
 		<GradeDisplay
                     :grade="gradeString"
                     :height="200" 
@@ -12,9 +13,9 @@
 		
 		<div style="display: flex; align-items: center; justify-content: center;">
 			<button type="button" class="nes-btn is-success" @click="Replay" style="margin-right: 0.5rem;">
-			  <svg class="nav-icon" width="40" height="40" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-				<path d="M10 20H8V4h2v2h2v3h2v2h2v2h-2v2h-2v3h-2v2z" fill="currentColor"/> 
-			  </svg> Home
+				<svg class="nav-icon" width="40" height="40" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+					<path d="M2 5h20v14H2V5zm18 12V7H4v10h16zM8 9h2v2h2v2h-2v2H8v-2H6v-2h2V9zm6 0h2v2h-2V9zm4 4h-2v2h2v-2z" fill="white"/>
+				</svg> Accueil
 			</button>
 			<button class="nes-btn is-primary" label="Classements" @click="Leaderboard">
 				<svg class="nav-icon" width="40" height="40" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">

@@ -35,9 +35,10 @@
         <Dialog :visible="secretDialogOpen" modal :style="{ width: '25rem' }" class="nes-container is-dark" headerless>
             <template #container="{ closeCallback }">
                 <div class="dialog-content">
-                    <p>Vous avez trouvé un point bonus !</p>
-                    <button class="secret-btn nes-btn is-success" @click="closeSecret">Le donner</button>
-                    <button class="secret-btn nes-btn is-error" @click="confirmCloseSecret">Ne pas le donner</button>
+                    <p class="nes-text is-success">Vous avez trouvé un point bonus !</p>
+                    <p style="font-size: 0.75rem;">Ajoutez le à notre note :)</p>
+                    <button class="secret-btn nes-btn is-success" @click="closeSecret">Ajouter à la note</button>
+                    <button class="secret-btn nes-btn is-error" @click="confirmCloseSecret">Le laisser</button>
                 </div>
             </template>
         </Dialog>
@@ -46,8 +47,8 @@
             <template #container="{ closeCallback }">
                 <div class="dialog-content">
                     <p>Êtes-vous sûr ?</p>
-                    <button class="secret-btn nes-btn is-success" @click="closeSecret">Le donner</button>
-                    <button class="secret-btn nes-btn is-success" @click="closeSecret">Le donner</button>
+                    <button class="secret-btn nes-btn is-success" @click="closeSecret">Ajouter à la note</button>
+                    <button class="secret-btn nes-btn is-success" @click="closeSecret">Ajouter à la note</button>
                 </div>
             </template>
         </Dialog>
